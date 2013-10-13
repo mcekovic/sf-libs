@@ -2,7 +2,6 @@ package test.db.gateway;
 
 import java.sql.*;
 import java.util.*;
-import java.util.concurrent.atomic.*;
 
 import org.strangeforest.db.*;
 import org.strangeforest.db.gateway.*;
