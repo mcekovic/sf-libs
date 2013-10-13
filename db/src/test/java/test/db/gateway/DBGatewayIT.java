@@ -2,6 +2,7 @@ package test.db.gateway;
 
 import java.sql.*;
 import java.util.*;
+import java.util.concurrent.atomic.*;
 
 import org.strangeforest.db.*;
 import org.strangeforest.db.gateway.*;
@@ -16,7 +17,6 @@ import static org.testng.Assert.*;
 public class DBGatewayIT {
 
 	private ConnectionPoolDataSource dataSource;
-	private SQLs sqls;
 	private DBGateway db;
 
 	private static final String DRIVER_CLASS = "org.h2.Driver";
@@ -33,7 +33,7 @@ public class DBGatewayIT {
 		props.setProperty("v$session.program", "DBGateway Test");
 		dataSource.setConnectionProperties(props);
 		dataSource.init();
-		sqls = new SQLs(getClass().getResourceAsStream("test-dbgateway.sqls"));
+		SQLs sqls = new SQLs(getClass().getResourceAsStream("test-dbgateway.sqls"));
 		db = new DBGateway(dataSource, sqls);
 	}
 
@@ -172,25 +172,25 @@ public class DBGatewayIT {
 		);
 	}
 
-//	@Test(groups = {"DatabaseRequired", "InsertTest"}, dependsOnMethods = "insertWithAutoGenColumnsTest")
-//	public void updateWithAutoGenColumnsTest() {
-//		db.executeUpdate("Update",
-//			new StatementPreparer() {
-//				public void prepare(PreparedStatementHelper st) throws SQLException {
-//					setString(st, "name", "PeraAutoGen");
-//				}
-//			},
-//			new AutoGenColumnsReader() {
-//				public String[] getAutoGenColumns() {
-//					return new String[] {"Modified"};
-//				}
-//				public void readAutoGenColumns(ResultSet rs) throws SQLException {
-//					assertNotNull(rs.getTimestamp(1), "Auto-Gen field Modified not populated.");
-//				}
-//			}
-//		);
-//	}
-//
+	@Test(groups = {"DatabaseRequired", "InsertTest"}, dependsOnMethods = "insertWithAutoGenColumnsTest")
+	public void updateWithAutoGenColumnsTest() {
+		db.executeUpdate("Update",
+			new StatementPreparer() {
+				public void prepare(PreparedStatementHelper st) throws SQLException {
+					setString(st, "name", "PeraAutoGen");
+				}
+			},
+			new AutoGenColumnsReader() {
+				public String[] getAutoGenColumns() {
+					return new String[] {"Modified"};
+				}
+				public void readAutoGenColumns(ResultSet rs) throws SQLException {
+					assertNotNull(rs.getTimestamp(1), "Auto-Gen field Modified not populated.");
+				}
+			}
+		);
+	}
+
 	@Test(groups = {"DatabaseRequired", "InsertTest"})
 	public void batchedInsertTest() {
 		db.executeBatchUpdate("InsertInto",
@@ -205,32 +205,6 @@ public class DBGatewayIT {
 			}
 		);
 	}
-
-//	@Test(groups = {"DatabaseRequired", "InsertTest"})
-//	public void batchedInsertWithAutoGenColumnsTest() {
-//		final AtomicInteger autoGenCount = new AtomicInteger(0);
-//		db.executeBatchUpdate("InsertInto",
-//			new BatchStatementPreparer() {
-//				private int i;
-//				public boolean hasMore() {
-//					return ++i <= 5;
-//				}
-//				public void prepare(PreparedStatementHelper st) throws SQLException {
-//					setString(st, "name", "PeraAutoGen" + i);
-//				}
-//			},
-//			new AutoGenColumnsReader() {
-//				public String[] getAutoGenColumns() {
-//					return new String[] {"Created"};
-//				}
-//				public void readAutoGenColumns(ResultSet rs) throws SQLException {
-//					autoGenCount.incrementAndGet();
-//					assertNotNull(rs.getTimestamp(1), "Auto-Gen field Created not populated.");
-//				}
-//			}
-//		);
-//		assertEquals(autoGenCount.get(), 5);
-//	}
 
 	@Test(groups = "DatabaseRequired")
 	public void arrayParametersTest() {
