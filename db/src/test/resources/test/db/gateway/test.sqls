@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqls xmlns="http://www.strangeforest.org/schema/db">
+
+	<sql-group name="Test">
+
+		<sql name="TestGet">
+			SELECT * FROM DUAL
+		</sql>
+
+		<sql name="DualColumns">DUMMY</sql>
+
+		<sql name="TestGetWithInclude">
+			SELECT <include name="DualColumns"/> FROM DUAL
+		</sql>
+
+		<sql name="TestGetTransformed">
+			SELECT * FROM <table-name/>
+		</sql>
+
+		<sql name="TestGetTransformedWithInclude">
+			SELECT <include name="DualColumns"/> FROM <table-name/>
+		</sql>
+
+		<sql name="TestGetWithProfile">
+			SELECT 1<profile name="Oracle"> FROM DUAL</profile>
+		</sql>
+
+	</sql-group>
+	
+</sqls>

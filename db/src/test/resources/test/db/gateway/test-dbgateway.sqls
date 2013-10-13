@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqls xmlns="http://www.strangeforest.org/schema/db">
+
+	<sql-group name="test">
+
+		<sql name="SelectAll">
+			SELECT X
+		</sql>
+
+		<sql name="SelectWhere">
+			SELECT X FROM DUAL
+			WHERE X = :x
+		</sql>
+
+		<sql name="WrongSyntax">
+			SELECT X2 FROM DUAL
+		</sql>
+
+		<sql name="CreateTable">
+			CREATE TABLE TestBrisi (
+				Name VARCHAR(20) PRIMARY KEY,
+				Created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+				Modified TIMESTAMP NULL
+			)
+		</sql>
+
+		<sql name="InsertInto">
+			INSERT INTO TestBrisi (Name) VALUES (:name)
+		</sql>
+
+		<sql name="Update">
+			UPDATE TestBrisi SET Modified = SYSDATE WHERE NAME = :name
+		</sql>
+
+		<sql name="DropTable">
+			DROP TABLE TestBrisi
+		</sql>
+
+		<sql name="TestSleep">
+			BEGIN
+				DBMS_LOCK.SLEEP(:seconds);
+			END;
+		</sql>
+
+		<sql name="ArrayParameters">
+			SELECT X FROM DUAL
+			WHERE X = ?
+		</sql>
+
+		<sql name="NamedParameters">
+			SELECT X FROM DUAL
+			WHERE X = :x
+		</sql>
+
+	</sql-group>
+
+</sqls>
