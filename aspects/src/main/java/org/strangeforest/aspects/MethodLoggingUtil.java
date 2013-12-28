@@ -4,9 +4,12 @@ import java.util.*;
 
 import org.aspectj.lang.reflect.*;
 import org.joda.time.*;
+import org.joda.time.format.*;
 import org.strangeforest.util.*;
 
 public abstract class MethodLoggingUtil {
+
+	private static final PeriodFormatter PERIOD_FORMATTER = PeriodFormat.wordBased();
 
 	public static String beforeMessage(MethodSignature signature, Object[] paramValues, List<Integer> skipParams, List<Integer> maskParams) {
 		StringBuilder sb = new StringBuilder();
@@ -36,7 +39,7 @@ public abstract class MethodLoggingUtil {
 		if (!signature.getReturnType().equals(void.class))
 			sb.append('=').append(returnValue);
 		if (dt != -1L)
-			sb.append(" [").append(new Period(dt)).append(']');
+			sb.append(" [").append(new Period(dt).toString(PERIOD_FORMATTER)).append(']');
 		return sb.toString();
 	}
 }
