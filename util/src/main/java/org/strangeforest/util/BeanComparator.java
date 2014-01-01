@@ -64,7 +64,7 @@ public class BeanComparator<T> implements Comparator<T> {
 			v1 = BeanUtil.getProperty(o1, name);
 			v2 = BeanUtil.getProperty(o2, name);
 		}
-		if (ObjectUtil.isCastableBy(v1, Comparable.class) && ObjectUtil.isCastableBy(v2, Comparable.class))
+		if (ObjectUtil.isCastableTo(v1, Comparable.class) && ObjectUtil.isCastableTo(v2, Comparable.class))
 			return dir*ObjectUtil.compare((Comparable)v1, (Comparable)v2);
 		else
 			throw new IllegalArgumentException(o1.getClass().getName() + " is not comparable by " + name + ".");

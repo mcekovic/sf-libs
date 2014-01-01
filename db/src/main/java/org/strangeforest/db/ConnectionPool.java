@@ -313,7 +313,7 @@ public class ConnectionPool extends ResourcePool<PooledConnection> {
 	 * @throws SQLException if error occur creating check statements 
 	 */
 	public synchronized void setCheckQuery(String newCheckQuery) throws SQLException {
-		if (ObjectUtil.notEqual(newCheckQuery, checkQuery)) {
+		if (!Objects.equals(newCheckQuery, checkQuery)) {
 			checkQuery = newCheckQuery;
 			if (isInitialized()) {
 				for (PooledResource<org.strangeforest.db.PooledConnection> resource : getPooledResources())

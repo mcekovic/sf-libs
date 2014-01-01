@@ -1,11 +1,9 @@
 package org.strangeforest.xml.helpers;
 
-import java.util.*;
 import java.text.*;
+import java.util.*;
 
 import org.w3c.dom.*;
-
-import org.strangeforest.util.*;
 
 /**
  * <p>This class is a <i>Decorator</i> over the standard W3C DOM 3 <tt>Element</tt> interface.</p>
@@ -119,7 +117,7 @@ public class ElementHelper extends NodeHelper<Element> implements Element {
 		NodeList nodes = node.getElementsByTagName(tagName);
 		for (int i = 0, length = nodes.getLength(); i < length; i++) {
 			Element elem = (Element)nodes.item(i);
-			if (ObjectUtil.equal(attrValue, elem.getAttribute(attrName)))
+			if (Objects.equals(attrValue, elem.getAttribute(attrName)))
 				return new ElementHelper(elem);
 		}
 		return null;

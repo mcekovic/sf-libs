@@ -102,7 +102,7 @@ public class MultiHashMap<K, V> extends AbstractMap<K, V> implements MultiMap<K,
 		if (t.size() != size())
 			return false;
 		for (Map.Entry<K, Set<V>> entry : allEntrySet())
-			if (!ObjectUtil.equal(entry.getValue(), t.getAll(entry.getKey())))
+			if (!Objects.equals(entry.getValue(), t.getAll(entry.getKey())))
 				return false;
 		return true;
 	}

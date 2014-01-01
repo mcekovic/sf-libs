@@ -1,9 +1,9 @@
 package org.strangeforest.db;
 
 import java.sql.*;
+import java.util.*;
 
 import org.strangeforest.pool.*;
-import org.strangeforest.util.*;
 
 abstract class ConnectionManager implements ResourceManager<PooledConnection> {
 
@@ -53,6 +53,6 @@ abstract class ConnectionManager implements ResourceManager<PooledConnection> {
 	protected abstract Connection allocateConnection() throws SQLException;
 
 	public boolean checkCredentials(String username, String password) {
-		return ObjectUtil.equal(username, this.username) && ObjectUtil.equal(password, this.password);
+		return Objects.equals(username, this.username) && Objects.equals(password, this.password);
 	}
 }

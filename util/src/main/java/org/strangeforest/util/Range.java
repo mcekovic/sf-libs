@@ -1,6 +1,7 @@
 package org.strangeforest.util;
 
 import java.io.*;
+import java.util.*;
 
 public class Range<T extends Comparable<? super T>> implements Serializable, Cloneable {
 
@@ -105,7 +106,7 @@ public class Range<T extends Comparable<? super T>> implements Serializable, Clo
 		if (obj == null) return false;
 		if (obj instanceof Range) {
 			Range<?> range = (Range)obj;
-			return ObjectUtil.equal(from, range.from) && ObjectUtil.equal(to, range.to);
+			return Objects.equals(from, range.from) && Objects.equals(to, range.to);
 		}
 		else
 			return false;

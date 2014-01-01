@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * <p>Utility class providing static methods for arrays similar with what <tt>java.util.List</tt> have.</p>
  */
-public abstract class ArrayUtil{
+public abstract class ArrayUtil {
 
 	// contains
 
@@ -67,7 +67,7 @@ public abstract class ArrayUtil{
 
 	public static <E> boolean contains(E[] a, E o) {
 		for (E e : a)
-			if (ObjectUtil.equal(e, o))
+			if (Objects.equals(e, o))
 				return true;
 		return false;
 	}

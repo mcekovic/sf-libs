@@ -1,5 +1,7 @@
 package org.strangeforest.util;
 
+import java.util.*;
+
 public final class Reference<T> {
 
 	private volatile T obj;
@@ -34,7 +36,7 @@ public final class Reference<T> {
 		if (!(o instanceof Reference))
 			return false;
 		Reference reference = (Reference)o;
-		return ObjectUtil.equal(obj, reference.obj);
+		return Objects.equals(obj, reference.obj);
 	}
 
 	@Override public int hashCode() {

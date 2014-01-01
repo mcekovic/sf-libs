@@ -98,7 +98,7 @@ public class OrderedHashMap<K, V> extends AbstractMap<K, V> implements OrderedMa
 		boolean before = false;
 		for (int i = 0; i < index; i++) {
 			old = old.next;
-			if (ObjectUtil.equal(key, old.key))
+			if (Objects.equals(key, old.key))
 				before = true;
 		}
 		if (before)
@@ -201,7 +201,7 @@ public class OrderedHashMap<K, V> extends AbstractMap<K, V> implements OrderedMa
 		int i = 0;
 		for (LinkedEntry<K, V> e = header.next; e != header; e = e.next) {
 			K ek = e.key;
-			if (ObjectUtil.equal(ek, key))
+			if (Objects.equals(ek, key))
 				return i;
 			i++;
 		}
@@ -212,7 +212,7 @@ public class OrderedHashMap<K, V> extends AbstractMap<K, V> implements OrderedMa
 		int i = 0;
 		for (LinkedEntry<K, V> e = header.next; e != header; e = e.next) {
 			V ev = e.value;
-			if (ObjectUtil.equal(ev, value))
+			if (Objects.equals(ev, value))
 				return i;
 			i++;
 		}
@@ -224,7 +224,7 @@ public class OrderedHashMap<K, V> extends AbstractMap<K, V> implements OrderedMa
 		for (LinkedEntry<K, V> e = header.prev; e != header; e = e.prev) {
 			i--;
 			V ev = e.value;
-			if (ObjectUtil.equal(ev, value))
+			if (Objects.equals(ev, value))
 				return i;
 		}
 		return -1;
