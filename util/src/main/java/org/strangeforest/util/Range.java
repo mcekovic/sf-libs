@@ -103,22 +103,13 @@ public class Range<T extends Comparable<? super T>> implements Serializable, Clo
 
 	@Override public boolean equals(Object obj) {
 		if (obj == this) return true;
-		if (obj == null) return false;
-		if (obj instanceof Range) {
-			Range<?> range = (Range)obj;
-			return Objects.equals(from, range.from) && Objects.equals(to, range.to);
-		}
-		else
-			return false;
+		if (!(obj instanceof Range)) return false;
+		Range<?> range = (Range)obj;
+		return Objects.equals(from, range.from) && Objects.equals(to, range.to);
 	}
 
 	@Override public int hashCode() {
-		int hc = 0;
-		if (from != null)
-			hc += from.hashCode();
-		if (to != null)
-			hc += to.hashCode();
-		return hc;
+		return 31 * Objects.hashCode(from) + Objects.hashCode(to);
 	}
 
 	@Override public String toString() {
