@@ -11,10 +11,13 @@
 	<packaging>jar</packaging>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>Strange Forest Aspects Library</name>
+
 	<scm>
+		<connection>${base.scm.url}/util</connection>
 		<developerConnection>${base.scm.url}/aspects</developerConnection>
 		<url>${base.browse.url}/aspects</url>
 	</scm>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.strangeforest.libs</groupId>

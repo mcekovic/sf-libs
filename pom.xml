@@ -217,12 +217,12 @@
 			<dependency>
 				<groupId>org.strangeforest.libs</groupId>
 				<artifactId>sf-util</artifactId>
-				<version>1.0.0-SNAPSHOT</version>
+				<version>[1.0.0-SNAPSHOT,]</version>
 			</dependency>
 			<dependency>
 				<groupId>org.strangeforest.libs</groupId>
 				<artifactId>sf-db</artifactId>
-				<version>1.0.0-SNAPSHOT</version>
+				<version>[1.0.0-SNAPSHOT,]</version>
 			</dependency>
 			<dependency>
 				<groupId>org.aspectj</groupId>
@@ -252,7 +252,7 @@
 			<dependency>
 				<groupId>com.h2database</groupId>
 				<artifactId>h2</artifactId>
-				<version>1.3.174</version>
+				<version>1.3.175</version>
 			</dependency>
 			<dependency>
 				<groupId>org.hamcrest</groupId>
