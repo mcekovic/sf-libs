@@ -41,9 +41,9 @@
 	</modules>
 
 	<scm>
-		<connection>${base.scm.url}/finlibs</connection>
-		<developerConnection>${base.scm.url}/finlibs</developerConnection>
-		<url>${base.browse.url}/finlibs</url>
+		<connection>${base.scm.url}</connection>
+		<developerConnection>${base.scm.url}</developerConnection>
+		<url>${base.browse.url}</url>
 	</scm>
 
 	<build>
