@@ -31,21 +31,13 @@ public class SQLsTest {
 
 	@Test
 	public void testGetTransformedSql() {
-		String sql = template.getSQL("TestGetTransformed", new SQLTransformer() {
-			public void transform(ElementHelper sql) {
-				sql.findElement("table-name").setTextContent("DUAL");
-			}
-		});
+		String sql = template.getSQL("TestGetTransformed", sqlNode -> sqlNode.findElement("table-name").setTextContent("DUAL"));
 		Assert.assertEquals(sql, "SELECT * FROM DUAL");
 	}
 
 	@Test
 	public void testGetTransformedSqlWithInclude() {
-		String sql = template.getSQL("TestGetTransformedWithInclude", new SQLTransformer() {
-			public void transform(ElementHelper sql) {
-				sql.findElement("table-name").setTextContent("DUAL");
-			}
-		});
+		String sql = template.getSQL("TestGetTransformedWithInclude", sqlNode -> sqlNode.findElement("table-name").setTextContent("DUAL"));
 		Assert.assertEquals(sql, "SELECT DUMMY FROM DUAL");
 	}
 

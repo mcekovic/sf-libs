@@ -56,7 +56,7 @@ public class HandleExceptionAspect extends AnnotationDrivenAspectSupport<HandleE
 				handleExInfo.wrapInto = wrapInto;
 			boolean strictWrapping = handleExAnn.strictWrapping();
 			if (strictWrapping)
-				handleExInfo.strictWrapping = strictWrapping;
+				handleExInfo.strictWrapping = true;
 		}
 		return handleExInfo;
 	}

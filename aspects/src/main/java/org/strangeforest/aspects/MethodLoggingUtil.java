@@ -1,9 +1,9 @@
 package org.strangeforest.aspects;
 
+import java.time.*;
 import java.util.*;
 
 import org.aspectj.lang.reflect.*;
-import org.joda.time.*;
 import org.strangeforest.util.*;
 
 public abstract class MethodLoggingUtil {
@@ -36,7 +36,7 @@ public abstract class MethodLoggingUtil {
 		if (!signature.getReturnType().equals(void.class))
 			sb.append('=').append(returnValue);
 		if (dt != -1L)
-			sb.append(" [").append(new Period(dt)).append(']');
+			sb.append(" [").append(Period.from(Duration.ofMillis(dt))).append(']');
 		return sb.toString();
 	}
 }

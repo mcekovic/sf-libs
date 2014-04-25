@@ -3,8 +3,7 @@ package org.strangeforest.concurrent;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.*;
-
-import org.strangeforest.util.*;
+import java.util.function.*;
 
 /**
  * <p>This is base <tt>LockableMap</tt> implementation.</p>

@@ -27,7 +27,7 @@ public class AdaptiveThreadPoolExecutor extends AbstractExecutorService {
 	private static final int TERMINATED = 3;
 
 	public AdaptiveThreadPoolExecutor(int corePoolSize, int maxPoolSize) {
-		this(0, corePoolSize, maxPoolSize, 60, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(), Executors.defaultThreadFactory(), new AbortPolicy());
+		this(0, corePoolSize, maxPoolSize, 60, TimeUnit.SECONDS, new SynchronousQueue<>(), Executors.defaultThreadFactory(), new AbortPolicy());
 	}
 
 	public AdaptiveThreadPoolExecutor(int corePoolSize, int maxPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {

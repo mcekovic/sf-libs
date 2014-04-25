@@ -104,14 +104,12 @@ public class ConnectionPoolIT {
 	@Test
 	public void twoConnectionsInTx() throws Exception {
 		SQLs sqls = new SQLs(Collections.singletonMap("GetName", "SELECT NAME FROM INFORMATION_SCHEMA.USERS"));
-		final DBGateway db = new DBGateway(dataSource, sqls);
+		DBGateway db = new DBGateway(dataSource, sqls);
 		TransactionManager.begin();
 		try {
-			db.executeQuery("GetName", new ResultSetReader() {
-				@Override public void readResults(ResultSet rs) throws SQLException {
-					assertEquals(db.fetchScalar("GetName"), USERNAME);
-					assertEquals(rs.getString(1), USERNAME);
-				}
+			db.executeQuery("GetName", rs -> {
+				assertEquals(db.fetchScalar("GetName"), USERNAME);
+				assertEquals(rs.getString(1), USERNAME);
 			});
 			TransactionManager.commit();
 		}

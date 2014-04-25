@@ -115,7 +115,7 @@ public class TransactionAspect extends AnnotationDrivenAspectSupport<Transaction
 				tranInfo.propagation = propagation;
 			boolean rollbackOnly = tranAnn.rollbackOnly();
 			if (rollbackOnly)
-				tranInfo.rollbackOnly = rollbackOnly;
+				tranInfo.rollbackOnly = true;
 		}
 		return tranInfo;
 	}

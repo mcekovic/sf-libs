@@ -16,7 +16,7 @@ public class LockableMLFUCache<K, V> extends LockableCache<K, V> {
 	 * Creates <tt>LockableMLFUCache</tt> with unlimited capacity.
 	 */
 	public LockableMLFUCache() {
-		super(new MLFUCache<K, V>());
+		super(new MLFUCache<>());
 	}
 
 	/**
@@ -24,7 +24,7 @@ public class LockableMLFUCache<K, V> extends LockableCache<K, V> {
 	 * @param capacity cache capacity. Capacity of 0 means unlimited capacity.
 	 */
 	public LockableMLFUCache(int capacity) {
-		super(new MLFUCache<K, V>(capacity));
+		super(new MLFUCache<>(capacity));
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package org.strangeforest.util;
 
 import java.util.*;
+import java.util.function.*;
 
 public class LazyIterator<K, V> implements Iterator<V> {
 

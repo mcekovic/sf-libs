@@ -19,11 +19,7 @@ public class LockableCache<K, V> extends BaseLockableMap<K, V> implements Cache<
 	public LockableCache(Cache<K, V> cache) {
 		super(cache);
 		this.cache = cache;
-		cache.addCacheListener(new CacheListener<K, V>() {
-			@Override public void entryRemoved(Entry<K, V> entry) {
-				removeLock(entry.getKey());
-			}
-		});
+		cache.addCacheListener(entry -> removeLock(entry.getKey()));
 	}
 
 	@Override public Set<Entry<K, V>> entrySet() {

@@ -71,13 +71,9 @@ public class LRUCache<K, V> extends AbstractMap<K, V> implements Cache<K, V> {
 			ensureCapacity();
 		}
 		else
-			this.map = (capacity > 0) ? new HashMap<K, LinkedValue<K, V>>(capacity*3/2) : new HashMap<K, LinkedValue<K, V>>();
+			this.map = (capacity > 0) ? new HashMap<>(capacity*3/2) : new HashMap<>();
 
-		checkExpiryScheduler = new FixedRateScheduler(new Runnable() {
-			@Override public void run() {
-				removeExpiredEntries();
-			}
-		}, 0L, "Cache Expirer");
+		checkExpiryScheduler = new FixedRateScheduler(this::removeExpiredEntries, 0L, "Cache Expirer");
 	}
 
 	private void initHeader() {

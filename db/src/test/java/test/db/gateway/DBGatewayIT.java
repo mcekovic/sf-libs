@@ -47,24 +47,12 @@ public class DBGatewayIT {
 
 	@Test(groups = "DatabaseRequired")
 	public void executeQueryTest() {
-		db.executeQuery("SelectAll",
-			new ResultSetReader() {
-				public void readResults(ResultSet rs) throws SQLException {
-					assertEquals(getInt(rs, "X"), 1);
-				}
-			}
-		);
+		db.executeQuery("SelectAll", rs -> assertEquals(getInt(rs, "X"), 1));
 	}
 
 	@Test(groups = "DatabaseRequired", expectedExceptions = DBException.class)
 	public void wrongSyntaxTest() {
-		db.executeQuery("WrongSyntax",
-			new ResultSetReader() {
-				public void readResults(ResultSet rs) throws SQLException {
-					fail();
-				}
-			}
-		);
+		db.executeQuery("WrongSyntax", rs -> fail());
 	}
 
 	@Test(groups = "DatabaseRequired")
@@ -75,26 +63,16 @@ public class DBGatewayIT {
 
 	@Test(groups = "DatabaseRequired")
 	public void fetchOneTest() {
-		Dual dual = db.fetchOne("SelectWhere", DualReader,
-			new StatementPreparer() {
-				public void prepare(PreparedStatementHelper st) throws SQLException {
-					st.setMasked("x", true);
-					setInt(st, "x", 1);
-				}
-			} 
-		);
+		Dual dual = db.fetchOne("SelectWhere", DualReader,	(PreparedStatementHelper st) -> {
+			st.setMasked("x", true);
+			setInt(st, "x", 1);
+		});
 		assertEquals(dual.x, 1);
 	}
 
 	@Test(groups = "DatabaseRequired")
 	public void fetchOneNotFound() {
-		Dual dual = db.fetchOne("SelectWhere", DualReader,
-			new StatementPreparer() {
-				public void prepare(PreparedStatementHelper st) throws SQLException {
-					setInt(st, "x", 2);
-				}
-			}
-		);
+		Dual dual = db.fetchOne("SelectWhere", DualReader, (PreparedStatementHelper st) -> setInt(st, "x", 2));
 		assertNull(dual);
 	}
 
@@ -107,13 +85,7 @@ public class DBGatewayIT {
 
 	@Test(groups = "DatabaseRequired")
 	public void fetchListTest2() {
-		List<Dual> duals = db.fetchList("SelectWhere", DualReader,
-			new StatementPreparer() {
-				public void prepare(PreparedStatementHelper st) throws SQLException {
-					setInt(st, "x", 2);
-				}
-			}
-		);
+		List<Dual> duals = db.fetchList("SelectWhere", DualReader, (PreparedStatementHelper st) -> setInt(st, "x", 2));
 		assertEquals(duals.size(), 0);
 	}
 
@@ -132,34 +104,17 @@ public class DBGatewayIT {
 
 	@Test(groups = {"DatabaseRequired", "InsertTest"})
 	public void insertTest() {
-		db.executeUpdate("InsertInto",
-			new StatementPreparer() {
-				public void prepare(PreparedStatementHelper st) throws SQLException {
-					setString(st, "name", "Pera");
-				}
-			}
-		);
+		db.executeUpdate("InsertInto", (PreparedStatementHelper st) -> setString(st, "name", "Pera"));
 	}
 
 	@Test(groups = {"DatabaseRequired", "InsertTest"}, expectedExceptions = DBException.class)
 	public void insertTest2() {
-		db.executeUpdate("InsertInto",
-			new StatementPreparer() {
-				public void prepare(PreparedStatementHelper st) throws SQLException {
-					setString(st, "name", "Pera je veliki konj koji ne moze da stane u stalu!");
-				}
-			}
-		);
+		db.executeUpdate("InsertInto", (PreparedStatementHelper st) -> setString(st, "name", "Pera je veliki konj koji ne moze da stane u stalu!"));
 	}
 
 	@Test(groups = {"DatabaseRequired", "InsertTest"})
 	public void insertWithAutoGenColumnsTest() {
-		db.executeUpdate("InsertInto",
-			new StatementPreparer() {
-				public void prepare(PreparedStatementHelper st) throws SQLException {
-					setString(st, "name", "PeraAutoGen");
-				}
-			},
+		db.executeUpdate("InsertInto", st -> setString(st, "name", "PeraAutoGen"),
 			new AutoGenColumnsReader() {
 				public String[] getAutoGenColumns() {
 					return new String[] {"Created"};
@@ -173,12 +128,7 @@ public class DBGatewayIT {
 
 	@Test(groups = {"DatabaseRequired", "InsertTest"}, dependsOnMethods = "insertWithAutoGenColumnsTest")
 	public void updateWithAutoGenColumnsTest() {
-		db.executeUpdate("Update",
-			new StatementPreparer() {
-				public void prepare(PreparedStatementHelper st) throws SQLException {
-					setString(st, "name", "PeraAutoGen");
-				}
-			},
+		db.executeUpdate("Update", st -> setString(st, "name", "PeraAutoGen"),
 			new AutoGenColumnsReader() {
 				public String[] getAutoGenColumns() {
 					return new String[] {"Modified"};
@@ -229,12 +179,10 @@ public class DBGatewayIT {
 	}
 
 
-	private static ObjectReader<Dual> DualReader = new ObjectReader<Dual>() {
-		public Dual read(ResultSet rs) throws SQLException {
-			Dual dual = new Dual();
-			dual.x = getInt(rs, "X");
-			return dual;
-		}
+	private static ObjectReader<Dual> DualReader = rs -> {
+		Dual dual = new Dual();
+		dual.x = getInt(rs, "X");
+		return dual;
 	};
 
 	public static class Dual {

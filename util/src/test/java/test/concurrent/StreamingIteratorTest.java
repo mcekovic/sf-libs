@@ -142,7 +142,7 @@ public class StreamingIteratorTest {
 	}
 
 	private void assertPassed(StopWatch watch, long millis) {
-		long passedMillis = watch.time().getMillis();
+		long passedMillis = watch.time().toMillis();
 		assertTrue(MessageFormat.format("Passed {0}, expected at least {1}", passedMillis, millis), passedMillis >= millis - MARGIN);
 	}
 

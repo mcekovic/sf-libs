@@ -64,7 +64,12 @@ public class MultiHashMap<K, V> extends AbstractMap<K, V> implements MultiMap<K,
 		return false;
 	}
 
-	@Override public Set<V> remove(Object key, Object value) {
+	@Override public boolean remove(Object key, Object value) {
+		Set<V> values = map.get(key);
+		return values != null && values.remove(value);
+	}
+
+	@Override public Set<V> removeOne(Object key, Object value) {
 		Set<V> values = map.get(key);
 		if (values != null)
 			values.remove(value);

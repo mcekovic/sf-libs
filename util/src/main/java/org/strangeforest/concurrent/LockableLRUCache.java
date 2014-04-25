@@ -14,7 +14,7 @@ public class LockableLRUCache<K, V> extends LockableCache<K, V> {
 	 * Creates <tt>LockableLRUCache</tt> with unlimited capacity.
 	 */
 	public LockableLRUCache() {
-		super(new LRUCache<K, V>());
+		super(new LRUCache<>());
 	}
 
 	/**
@@ -22,7 +22,7 @@ public class LockableLRUCache<K, V> extends LockableCache<K, V> {
 	 * @param capacity cache capacity. Capacity of 0 means unlimited capacity.
 	 */
 	public LockableLRUCache(int capacity) {
-		super(new LRUCache<K, V>(capacity));
+		super(new LRUCache<>(capacity));
 	}
 
 	/**

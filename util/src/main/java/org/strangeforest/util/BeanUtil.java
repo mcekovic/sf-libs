@@ -4,6 +4,7 @@ import java.beans.*;
 import java.lang.reflect.*;
 import java.text.*;
 import java.util.*;
+import java.util.function.*;
 
 /**
  * <p>Utility class for accessing JavaBean properties by name.</p>
@@ -142,11 +143,6 @@ public abstract class BeanUtil {
 	}
 
 	private static String getKey(Object bean, String name) {
-		String className = bean.getClass().getName();
-		StringBuilder key = new StringBuilder(className.length() + name.length() + 1);
-		key.append(className);
-		key.append('.');
-		key.append(name);
-		return key.toString();
+		return bean.getClass().getName() + '.' + name;
 	}
 }

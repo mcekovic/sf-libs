@@ -329,13 +329,11 @@ final class PooledConnection {
 		}
 		else if (maxStatements > 0) {
 			statements = new LRUCache<>(maxStatements);
-			statements.addCacheListener(new CacheListener<Object, PreparedStatementHelper>() {
-				@Override public void entryRemoved(Map.Entry<Object, PreparedStatementHelper> entry) {
-					try {
-						entry.getValue().doClose();
-					}
-					catch (SQLException ignored) {}
+			statements.addCacheListener(entry -> {
+				try {
+					entry.getValue().doClose();
 				}
+				catch (SQLException ignored) {}
 			});
 			this.statements = statements;
 		}

@@ -1,8 +1,7 @@
 package org.strangeforest.concurrent;
 
 import java.util.*;
-
-import org.strangeforest.util.*;
+import java.util.function.*;
 
 /**
  * <p>This is a <tt>Map</tt> that supports fine-grained, key-level locking.</p>

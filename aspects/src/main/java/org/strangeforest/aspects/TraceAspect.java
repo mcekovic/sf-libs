@@ -47,11 +47,7 @@ public class TraceAspect extends AnnotationDrivenAspectSupport<Traceable, TraceA
 	}
 
 	private PerformanceInfo trackPerformance(MethodSignature signature) {
-		StringBuilder sb = new StringBuilder(80);
-		sb.append(signature.getDeclaringTypeName());
-		sb.append('.');
-		sb.append(signature.getName());
-		PerformanceInfo perfInfo = performanceMonitor.getPerformanceInfo(sb.toString());
+		PerformanceInfo perfInfo = performanceMonitor.getPerformanceInfo(signature.getDeclaringTypeName() + '.' + signature.getName());
 		perfInfo.before();
 		return perfInfo;
 	}
@@ -65,10 +61,10 @@ public class TraceAspect extends AnnotationDrivenAspectSupport<Traceable, TraceA
 				trcInfo.logger = LoggerFactory.getLogger(loggerName);
 			boolean trackTime = trcAnn.trackTime();
 			if (trackTime)
-				trcInfo.trackTime = trackTime;
+				trcInfo.trackTime = true;
 			boolean trackPerformance = trcAnn.trackPerformance();
 			if (trackPerformance)
-				trcInfo.trackPerformance = trackPerformance;
+				trcInfo.trackPerformance = true;
 		}
 		return trcInfo;
 	}

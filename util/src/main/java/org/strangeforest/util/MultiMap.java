@@ -23,19 +23,19 @@ public interface MultiMap<K, V> extends Map<K, V> {
 	Set<V> getAll(K key);
 
 	/**
-	 * Removes all associations with specified key.
-	 * @param key key
-	 * @return Old <tt>Set</tt> of values associated with the <tt>key</tt> or <tt>null</tt> if specified key does not exist.
-	 */
-	Set<V> removeAll(Object key);
-
-	/**
 	 * Removes association of specified value with specified key.
 	 * @param key key
 	 * @param value value
 	 * @return remaining <tt>Set</tt> of values associated with the <tt>key</tt> or <tt>null</tt> if specified key does not exist.
 	 */
-	Set<V> remove(Object key, Object value);
+	Set<V> removeOne(Object key, Object value);
+
+	/**
+	 * Removes all associations with specified key.
+	 * @param key key
+	 * @return Old <tt>Set</tt> of values associated with the <tt>key</tt> or <tt>null</tt> if specified key does not exist.
+	 */
+	Set<V> removeAll(Object key);
 
 	Set<Map.Entry<K, Set<V>>> allEntrySet();
 }

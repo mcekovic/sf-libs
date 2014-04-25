@@ -4,8 +4,8 @@ import java.sql.*;
 
 import org.strangeforest.db.*;
 
-public abstract class BatchStatementPreparer implements StatementPreparer {
+public interface BatchStatementPreparer extends StatementPreparer {
 	
-	public abstract boolean hasMore();
-	public void prepareOnce(PreparedStatementHelper st) throws SQLException {}
+	boolean hasMore();
+	default void prepareOnce(PreparedStatementHelper st) throws SQLException {}
 }

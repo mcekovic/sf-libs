@@ -246,19 +246,19 @@ public class OrderedHashMap<K, V> extends AbstractMap<K, V> implements OrderedMa
 	}
 
 	@Override public void sortByKeys() {
-		sort(new MapEntryComparatorByKeys<K, V>(null));
+		sort(new MapEntryComparatorByKeys<>(null));
 	}
 
 	@Override public void sortByKeys(Comparator<? super K> comparator) {
-		sort(new MapEntryComparatorByKeys<K, V>(comparator));
+		sort(new MapEntryComparatorByKeys<>(comparator));
 	}
 
 	@Override public void sortByValues() {
-		sort(new MapEntryComparatorByValues<K, V>(null));
+		sort(new MapEntryComparatorByValues<>(null));
 	}
 
 	@Override public void sortByValues(Comparator<? super V> comparator) {
-		sort(new MapEntryComparatorByValues<K, V>(comparator));
+		sort(new MapEntryComparatorByValues<>(comparator));
 	}
 
 	private void sort(Comparator<Entry<K, V>> comparator) {

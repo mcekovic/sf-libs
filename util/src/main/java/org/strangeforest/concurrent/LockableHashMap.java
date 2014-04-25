@@ -10,14 +10,14 @@ import java.util.*;
 public class LockableHashMap<K, V> extends BaseLockableMap<K, V> {
 
 	public LockableHashMap() {
-		super(new HashMap<K, V>(), new HashMap<K, EntryLock>());
+		super(new HashMap<>(), new HashMap<>());
 	}
 
 	public LockableHashMap(int initialCapacity) {
-		super(new HashMap<K, V>(initialCapacity), new HashMap<K, EntryLock>(initialCapacity));
+		super(new HashMap<>(initialCapacity), new HashMap<>(initialCapacity));
 	}
 
 	public LockableHashMap(int initialCapacity, float loadFactor) {
-		super(new HashMap<K, V>(initialCapacity, loadFactor), new HashMap<K, EntryLock>(initialCapacity, loadFactor));
+		super(new HashMap<>(initialCapacity, loadFactor), new HashMap<>(initialCapacity, loadFactor));
 	}
 }

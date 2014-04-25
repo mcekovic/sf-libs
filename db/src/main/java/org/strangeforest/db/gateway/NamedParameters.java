@@ -24,7 +24,7 @@ public class NamedParameters implements StatementPreparer {
 
 	private final Parameter[] params;
 
-	private static final NamedParameters EMPTY_PARAMS = new NamedParameters(new Parameter[0]);
+	private static final NamedParameters EMPTY_PARAMS = new NamedParameters();
 
 	private NamedParameters(Parameter... params) {
 		this.params = params;
@@ -38,6 +38,6 @@ public class NamedParameters implements StatementPreparer {
 	}
 
 	protected void unknownParamType(Parameter param) {
-		throw new IllegalArgumentException(MessageFormat.format("Unsuported parameter type {0} for name {1}.", param.value.getClass().getName(), param.name));
+		throw new IllegalArgumentException(MessageFormat.format("Unsupported parameter type {0} for name {1}.", param.value.getClass().getName(), param.name));
 	}
 }
