@@ -36,7 +36,7 @@ public abstract class MethodLoggingUtil {
 		if (!signature.getReturnType().equals(void.class))
 			sb.append('=').append(returnValue);
 		if (dt != -1L)
-			sb.append(" [").append(Period.from(Duration.ofMillis(dt))).append(']');
+			sb.append(" [").append(Duration.ofMillis(dt)).append(']');
 		return sb.toString();
 	}
 }
