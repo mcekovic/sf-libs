@@ -13,7 +13,7 @@
 	<name>Strange Forest Aspects Library</name>
 
 	<scm>
-		<connection>${base.scm.url}/util</connection>
+		<connection>${base.scm.url}/aspects</connection>
 		<developerConnection>${base.scm.url}/aspects</developerConnection>
 		<url>${base.browse.url}/aspects</url>
 	</scm>

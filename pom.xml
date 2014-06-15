@@ -153,11 +153,11 @@
 					<artifactId>maven-antrun-plugin</artifactId>
 					<version>1.7</version>
 				</plugin>
-				<plugin>
-					<groupId>com.github.github</groupId>
-					<artifactId>site-maven-plugin</artifactId>
-					<version>0.9</version>
-				</plugin>
+				<!--<plugin>-->
+					<!--<groupId>com.github.github</groupId>-->
+					<!--<artifactId>site-maven-plugin</artifactId>-->
+					<!--<version>0.9</version>-->
+				<!--</plugin>-->
 			</plugins>
 		</pluginManagement>
 
@@ -185,30 +185,30 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>com.github.github</groupId>
-				<artifactId>site-maven-plugin</artifactId>
-				<configuration>
-					<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
-					<branch>refs/heads/mvn-repo</branch>
-					<includes>
-						<include>**/*</include>
-					</includes>
-					<repositoryName>sf-libs</repositoryName>
-					<repositoryOwner>mcekovic</repositoryOwner>
-					<message>Maven artifacts for ${project.version}</message>
-					<noJekyll>true</noJekyll>
-					<merge>true</merge>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>site</goal>
-						</goals>
-						<phase>deploy</phase>
-					</execution>
-				</executions>
-			</plugin>
+			<!--<plugin>-->
+				<!--<groupId>com.github.github</groupId>-->
+				<!--<artifactId>site-maven-plugin</artifactId>-->
+				<!--<configuration>-->
+					<!--<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>-->
+					<!--<branch>refs/heads/mvn-repo</branch>-->
+					<!--<includes>-->
+						<!--<include>**/*</include>-->
+					<!--</includes>-->
+					<!--<repositoryName>sf-libs</repositoryName>-->
+					<!--<repositoryOwner>mcekovic</repositoryOwner>-->
+					<!--<message>Maven artifacts for ${project.version}</message>-->
+					<!--<noJekyll>true</noJekyll>-->
+					<!--<merge>true</merge>-->
+				<!--</configuration>-->
+				<!--<executions>-->
+					<!--<execution>-->
+						<!--<goals>-->
+							<!--<goal>site</goal>-->
+						<!--</goals>-->
+						<!--<phase>deploy</phase>-->
+					<!--</execution>-->
+				<!--</executions>-->
+			<!--</plugin>-->
 		</plugins>
 	</build>
 
@@ -247,7 +247,7 @@
 			<dependency>
 				<groupId>com.h2database</groupId>
 				<artifactId>h2</artifactId>
-				<version>1.4.177</version>
+				<version>1.4.178</version>
 			</dependency>
 			<dependency>
 				<groupId>org.hamcrest</groupId>
@@ -284,10 +284,15 @@
 
 	<distributionManagement>
 		<repository>
-			<id>internal-repo</id>
-			<name>Internal Staging Repository</name>
-			<url>file://${project.build.directory}/mvn-repo</url>
+			<id>bintray</id>
+			<name>mcekovic-artifacts-sf-libs</name>
+			<url>https://api.bintray.com/maven/mcekovic/artifacts/sf-libs</url>
 		</repository>
+		<!--<repository>-->
+			<!--<id>internal-repo</id>-->
+			<!--<name>Internal Staging Repository</name>-->
+			<!--<url>file://${project.build.directory}/mvn-repo</url>-->
+		<!--</repository>-->
 	</distributionManagement>
 
 </project>
