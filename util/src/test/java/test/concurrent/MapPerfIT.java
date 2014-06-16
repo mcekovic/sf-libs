@@ -15,18 +15,18 @@ public class MapPerfIT {
 
 	@Test
 	public void test() throws Exception {
-		testMapAccess(100, new HashMap(), null, false);
+		testMapAccess(100, new HashMap<>(), null, false);
 
-		testMapAccess(COUNT, new HashMap(SIZE), "HashMap");
-		testMapAccess(COUNT, new LRUCache(SIZE), "LRUCache");
-		testMapAccess(COUNT, new MLFUCache(SIZE), "MLFUCache");
-		testMapAccess(COUNT, new LRUCache(SIZE, new SoftHashMap(SIZE*3/2)), "Soft LRUCache");
-		testSyncMapAccess(COUNT, new HashMap(SIZE), "HashMap");
-		testSyncMapAccess(COUNT, new LRUCache(SIZE), "LRUCache");
-		testSyncMapAccess(COUNT, new MLFUCache(SIZE), "MLFUCache");
-		testConcMapAccess(COUNT, new LockableHashMap(SIZE), "LockableHashMap");
-		testConcMapAccess(COUNT, new LockableLRUCache(SIZE), "LockableLRUCache");
-		testConcMapAccess(COUNT, new LockableMLFUCache(SIZE), "LockableMLFUCache");
+		testMapAccess(COUNT, new HashMap<>(SIZE), "HashMap");
+		testMapAccess(COUNT, new LRUCache<>(SIZE), "LRUCache");
+		testMapAccess(COUNT, new MLFUCache<>(SIZE), "MLFUCache");
+		testMapAccess(COUNT, new LRUCache<>(SIZE, new SoftHashMap<>(SIZE*3/2)), "Soft LRUCache");
+		testSyncMapAccess(COUNT, new HashMap<>(SIZE), "HashMap");
+		testSyncMapAccess(COUNT, new LRUCache<>(SIZE), "LRUCache");
+		testSyncMapAccess(COUNT, new MLFUCache<>(SIZE), "MLFUCache");
+		testConcMapAccess(COUNT, new LockableHashMap<>(SIZE), "LockableHashMap");
+		testConcMapAccess(COUNT, new LockableLRUCache<>(SIZE), "LockableLRUCache");
+		testConcMapAccess(COUNT, new LockableMLFUCache<>(SIZE), "LockableMLFUCache");
 	}
 
 	private static void testMapAccess(int count, Map<Integer, Long> map, String desc) throws Exception {
@@ -44,7 +44,7 @@ public class MapPerfIT {
 				value = new Long(i);
 				map.put(key, value);
 			}
-			s += value.longValue();
+			s += value;
 		}
 		if (show)
 			output(desc, t0, count, s);
@@ -64,7 +64,7 @@ public class MapPerfIT {
 					map.put(key, value);
 				}
 			}
-			s += value.longValue();
+			s += value;
 		}
 		output("Synchronized " + desc, t0, count, s);
 	}
@@ -87,7 +87,7 @@ public class MapPerfIT {
 			finally {
 				map.unlock(key);
 			}
-			s += value.longValue();
+			s += value;
 		}
 		output("Concurrent " + desc, t0, count, s);
 	}

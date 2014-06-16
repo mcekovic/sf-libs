@@ -89,53 +89,53 @@ public class AdaptiveThreadPoolExecutorTest {
 
 	@Test
 	public void testQueuePreferenceBounded() throws InterruptedException {
-		AdaptiveThreadPoolExecutor executor = new AdaptiveThreadPoolExecutor(1, 2, 5, TimeUnit.MINUTES, new ArrayBlockingQueue<Runnable>(2));
+		AdaptiveThreadPoolExecutor executor = new AdaptiveThreadPoolExecutor(1, 2, 5, TimeUnit.MINUTES, new ArrayBlockingQueue<>(2));
 		executor.setQueuePreference();
 		testExecutor(executor, EXPECTED_QUEUE_PREF_BOUNDED);
 	}
 
 	@Test
 	public void testQueuePreferenceUnbounded() throws InterruptedException {
-		AdaptiveThreadPoolExecutor executor = new AdaptiveThreadPoolExecutor(1, 2, 5, TimeUnit.MINUTES, new LinkedBlockingQueue<Runnable>());
+		AdaptiveThreadPoolExecutor executor = new AdaptiveThreadPoolExecutor(1, 2, 5, TimeUnit.MINUTES, new LinkedBlockingQueue<>());
 		executor.setQueuePreference();
 		testExecutor(executor, EXPECTED_QUEUE_PREF_UNBOUNDED);
 	}
 
 	@Test
 	public void testQueuePreferenceSync() throws InterruptedException {
-		AdaptiveThreadPoolExecutor executor = new AdaptiveThreadPoolExecutor(1, 4, 5, TimeUnit.MINUTES, new SynchronousQueue<Runnable>());
+		AdaptiveThreadPoolExecutor executor = new AdaptiveThreadPoolExecutor(1, 4, 5, TimeUnit.MINUTES, new SynchronousQueue<>());
 		executor.setQueuePreference();
 		testExecutor(executor, EXPECTED_SYNCHRONOUS);
 	}
 
 	@Test
 	public void testQueuePreferenceKeepAlive() throws InterruptedException {
-		AdaptiveThreadPoolExecutor executor = new AdaptiveThreadPoolExecutor(1, 2, 1, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(1));
+		AdaptiveThreadPoolExecutor executor = new AdaptiveThreadPoolExecutor(1, 2, 1, TimeUnit.SECONDS, new ArrayBlockingQueue<>(1));
 		executor.setQueuePreference();
 		testExecutorKeepAlive(executor, EXPECTED_KEEP_ALIVE);
 	}
 
 	@Test
 	public void testThreadPreferenceBounded() throws InterruptedException {
-		ExecutorService executor = new AdaptiveThreadPoolExecutor(1, 2, 5, TimeUnit.MINUTES, new ArrayBlockingQueue<Runnable>(2));
+		ExecutorService executor = new AdaptiveThreadPoolExecutor(1, 2, 5, TimeUnit.MINUTES, new ArrayBlockingQueue<>(2));
 		testExecutor(executor, EXPECTED_THREAD_PREF_BOUNDED);
 	}
 
 	@Test
 	public void testThreadPreferenceUnbounded() throws InterruptedException {
-		ExecutorService executor = new AdaptiveThreadPoolExecutor(1, 2, 5, TimeUnit.MINUTES, new LinkedBlockingQueue<Runnable>());
+		ExecutorService executor = new AdaptiveThreadPoolExecutor(1, 2, 5, TimeUnit.MINUTES, new LinkedBlockingQueue<>());
 		testExecutor(executor, EXPECTED_THREAD_PREF_UNBOUNDED);
 	}
 
 	@Test
 	public void testThreadPreferenceSync() throws InterruptedException {
-		ExecutorService executor = new ThreadPoolExecutor(1, 4, 5, TimeUnit.MINUTES, new SynchronousQueue<Runnable>());
+		ExecutorService executor = new ThreadPoolExecutor(1, 4, 5, TimeUnit.MINUTES, new SynchronousQueue<>());
 		testExecutor(executor, EXPECTED_SYNCHRONOUS);
 	}
 
 	@Test
 	public void testThreadPreferenceKeepAlive() throws InterruptedException {
-		ExecutorService executor = new AdaptiveThreadPoolExecutor(1, 2, 1, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(1));
+		ExecutorService executor = new AdaptiveThreadPoolExecutor(1, 2, 1, TimeUnit.SECONDS, new ArrayBlockingQueue<>(1));
 		testExecutorKeepAlive(executor, EXPECTED_KEEP_ALIVE);
 	}
 
@@ -251,7 +251,7 @@ public class AdaptiveThreadPoolExecutorTest {
 		int maxPoolSize = 50;
 		int corePoolSize = 10;
 		int taskCount = 10000;
-		AdaptiveThreadPoolExecutor executor = new AdaptiveThreadPoolExecutor(corePoolSize, maxPoolSize, 2, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(100));
+		AdaptiveThreadPoolExecutor executor = new AdaptiveThreadPoolExecutor(corePoolSize, maxPoolSize, 2, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100));
 //		executor.setQueuePreference();
 		final Random rnd = new Random();
 		int queueSize = 0;
@@ -259,13 +259,11 @@ public class AdaptiveThreadPoolExecutorTest {
 		for (int i = 0; i < taskCount; i++) {
 			Thread.sleep(rnd.nextInt(2));
 //			System.out.printf("%d: %d %d %d%n", System.currentTimeMillis()-t0, i, executor.getPoolSize(), executor.getQueue().size());
-			executor.execute(new Runnable() {
-				public void run() {
-					try {
-						Thread.sleep(rnd.nextInt(10));
-					}
-					catch (InterruptedException ignored) {}
+			executor.execute(() -> {
+				try {
+					Thread.sleep(rnd.nextInt(10));
 				}
+				catch (InterruptedException ignored) {}
 			});
 			queueSize = Math.max(queueSize, executor.getQueue().size());
 		}

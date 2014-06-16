@@ -24,7 +24,7 @@ public class OrderedMapTest {
 		map.put("6", "60");
 		map.put("7", "70");
 		map.put("8", "80");
-		original = (OrderedMap<String, String>)((OrderedHashMap<String, String>)map).clone();
+		original = ((OrderedHashMap<String, String>)map).clone();
 	}
 
 	@Test

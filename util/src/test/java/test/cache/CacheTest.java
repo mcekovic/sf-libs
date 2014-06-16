@@ -12,12 +12,12 @@ public class CacheTest {
 
 	@Test
 	public void testLRUCache() throws Exception {
-		test(new LRUCache<Integer, Integer>(5), new LRUCache<Integer, Integer>(5));
+		test(new LRUCache<>(5), new LRUCache<>(5));
 	}
 
 	@Test
 	public void testMLFUCache() throws Exception {
-		test(new MLFUCache<Integer, Integer>(5), new MLFUCache<Integer, Integer>(5));
+		test(new MLFUCache<>(5), new MLFUCache<>(5));
 	}
 
 	private static void test(Cache<Integer, Integer> cache, Cache<Integer, Integer> cache2) {

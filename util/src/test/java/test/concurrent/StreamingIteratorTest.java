@@ -43,18 +43,16 @@ public class StreamingIteratorTest {
 		StopWatch watch = new StopWatch();
 
 		final StreamingIterator<Integer> iter = new StreamingIterator<>(bufferSize);
-		iter.start(new Runnable() {
-			public void run() {
-				try {
-					Thread.sleep(TICK);
-					iter.put(1);
-					Thread.sleep(TICK);
-					iter.put(2);
-					Thread.sleep(TICK);
-					iter.put(3);
-				}
-				catch (InterruptedException ignored) {}
+		iter.start(() -> {
+			try {
+				Thread.sleep(TICK);
+				iter.put(1);
+				Thread.sleep(TICK);
+				iter.put(2);
+				Thread.sleep(TICK);
+				iter.put(3);
 			}
+			catch (InterruptedException ignored) {}
 		});
 
 		if (awaitStart) {
@@ -72,9 +70,7 @@ public class StreamingIteratorTest {
 	@Test
 	public void testEmptyIterator() throws InterruptedException {
 		final StreamingIterator<Integer> iter = new StreamingIterator<>(bufferSize);
-		iter.start(new Runnable() {
-			public void run() {}
-		});
+		iter.start(() -> {});
 		if (awaitStart)
 			iter.awaitStart();
 
@@ -85,10 +81,8 @@ public class StreamingIteratorTest {
 	public void testErrorInStreamingStart() throws InterruptedException {
 		final StreamingIterator<Integer> iter = new StreamingIterator<>(bufferSize);
 		try {
-			iter.start(new Runnable() {
-				public void run() {
-					throw new TestException(BOOOM);
-				}
+			iter.start(() -> {
+				throw new TestException(BOOOM);
 			});
 			if (awaitStart) {
 				iter.awaitStart();
@@ -111,17 +105,15 @@ public class StreamingIteratorTest {
 		StopWatch watch = new StopWatch();
 
 		final StreamingIterator<Integer> iter = new StreamingIterator<>(bufferSize);
-		iter.start(new Runnable() {
-			public void run() {
-				try {
-					Thread.sleep(TICK);
-					iter.put(1);
-					Thread.sleep(TICK);
-					iter.put(2);
-				}
-				catch (InterruptedException ignored) {}
-				throw new TestException(BOOOM);
+		iter.start(() -> {
+			try {
+				Thread.sleep(TICK);
+				iter.put(1);
+				Thread.sleep(TICK);
+				iter.put(2);
 			}
+			catch (InterruptedException ignored) {}
+			throw new TestException(BOOOM);
 		});
 
 		if (awaitStart) {

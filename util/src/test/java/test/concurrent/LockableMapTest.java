@@ -85,16 +85,14 @@ public class LockableMapTest {
 		final Semaphore cleared = new Semaphore(0);
 		final LockableMap<String, Long> map = new LockableHashMap<>();
 		map.lockedPut("1", 1L);
-		ThreadUtil.runInThread(new Runnable() {
-			public void run() {
-				try {
-					barrier.await();
-					map.tryClear();
-					cleared.release();
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
+		ThreadUtil.runInThread(() -> {
+			try {
+				barrier.await();
+				map.tryClear();
+				cleared.release();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 		map.lock("2");
@@ -117,16 +115,14 @@ public class LockableMapTest {
 		final Semaphore cleared = new Semaphore(0);
 		final LockableMap<String, Long> map = new LockableHashMap<>();
 		map.lockedPut("1", 1L);
-		ThreadUtil.runInThread(new Runnable() {
-			public void run() {
-				try {
-					barrier.await();
-					map.clear();
-					cleared.release();
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
+		ThreadUtil.runInThread(() -> {
+			try {
+				barrier.await();
+				map.clear();
+				cleared.release();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 		map.lock("2");

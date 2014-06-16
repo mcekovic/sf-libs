@@ -41,7 +41,7 @@ public class LockableCacheTest {
 	public void testConcurrency() throws Exception {
 		Thread.sleep(1000);
 //		long t0 = System.currentTimeMillis();
-		LockableCache<String, Long> cache = new LockableLRUCache<>(SIZE, new SoftHashMap<String, Long>());
+		LockableCache<String, Long> cache = new LockableLRUCache<>(SIZE, new SoftHashMap<>());
 //		Cache<String, Long> cache = new LRUCache<String, Long>(SIZE, new SoftHashMap());
 		Thread[] threads = new Thread[THREADS];
 		for (int i = 0; i < THREADS; i++) {

@@ -39,7 +39,7 @@ public class RangeTest {
 		assertEquals(new Range<>(4, 5), range.intersection(new Range<>(4, 10)));
 		assertEquals(new Range<>(3, 4), range.intersection(new Range<>(3, 4)));
 		assertEquals(new Range<>(1, 1), range.intersection(new Range<>(-10, 1)));
-		assertEquals(new Range<>(1, 5), range.intersection(new Range<Integer>(null, null)));
+		assertEquals(new Range<>(1, 5), range.intersection(new Range<>(null, null)));
 		assertEquals(new Range<>(3, 5), range.intersection(new Range<>(3, null)));
 		assertEquals(new Range<>(1, 5), range.intersection(new Range<>(null, 10)));
 		assertEquals(null, range.intersection(new Range<>(10, null)));
