@@ -154,11 +154,6 @@
 					<artifactId>maven-antrun-plugin</artifactId>
 					<version>1.7</version>
 				</plugin>
-				<!--<plugin>-->
-					<!--<groupId>com.github.github</groupId>-->
-					<!--<artifactId>site-maven-plugin</artifactId>-->
-					<!--<version>0.9</version>-->
-				<!--</plugin>-->
 			</plugins>
 		</pluginManagement>
 
@@ -186,30 +181,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!--<plugin>-->
-				<!--<groupId>com.github.github</groupId>-->
-				<!--<artifactId>site-maven-plugin</artifactId>-->
-				<!--<configuration>-->
-					<!--<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>-->
-					<!--<branch>refs/heads/mvn-repo</branch>-->
-					<!--<includes>-->
-						<!--<include>**/*</include>-->
-					<!--</includes>-->
-					<!--<repositoryName>sf-libs</repositoryName>-->
-					<!--<repositoryOwner>mcekovic</repositoryOwner>-->
-					<!--<message>Maven artifacts for ${project.version}</message>-->
-					<!--<noJekyll>true</noJekyll>-->
-					<!--<merge>true</merge>-->
-				<!--</configuration>-->
-				<!--<executions>-->
-					<!--<execution>-->
-						<!--<goals>-->
-							<!--<goal>site</goal>-->
-						<!--</goals>-->
-						<!--<phase>deploy</phase>-->
-					<!--</execution>-->
-				<!--</executions>-->
-			<!--</plugin>-->
 		</plugins>
 	</build>
 
@@ -218,12 +189,12 @@
 			<dependency>
 				<groupId>org.strangeforest.libs</groupId>
 				<artifactId>sf-util</artifactId>
-				<version>[1.0.0-SNAPSHOT,]</version>
+				<version>[1.0.0,]</version>
 			</dependency>
 			<dependency>
 				<groupId>org.strangeforest.libs</groupId>
 				<artifactId>sf-db</artifactId>
-				<version>[1.0.0-SNAPSHOT,]</version>
+				<version>[1.0.0,]</version>
 			</dependency>
 			<dependency>
 				<groupId>org.aspectj</groupId>
@@ -289,11 +260,6 @@
 			<name>mcekovic-artifacts-sf-libs</name>
 			<url>https://api.bintray.com/maven/mcekovic/artifacts/sf-libs</url>
 		</repository>
-		<!--<repository>-->
-			<!--<id>internal-repo</id>-->
-			<!--<name>Internal Staging Repository</name>-->
-			<!--<url>file://${project.build.directory}/mvn-repo</url>-->
-		<!--</repository>-->
 	</distributionManagement>
 
 </project>
