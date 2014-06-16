@@ -17,6 +17,7 @@ public abstract class HexEncoder {
 	/**
 	 * Encodes byte array <tt>data</tt> into char array.
 	 * @param data byte array to be encoded.
+	 * @param separator separator to separate bytes.
 	 * @return encoded char array.
 	 */
 	public static char[] encode(byte[] data, char separator) {

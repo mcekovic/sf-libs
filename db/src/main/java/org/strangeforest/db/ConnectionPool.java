@@ -12,7 +12,7 @@ import org.strangeforest.util.*;
 
 /**
  * <p><tt>ConnectionPool</tt> pools database connections, or more precisely, JDBC <tt>Connection</tt> objects.
- * <tt>ConnectionPool</tt> inherits all the features of <tt>ResourcePool</tt></tt> and adds prepared statement caching.</p>
+ * <tt>ConnectionPool</tt> inherits all the features of <tt>ResourcePool</tt> and adds prepared statement caching.</p>
  * <p>Typical usage will be:</p>
  * <blockquote><pre>
  * Connection conn = pool.getConnection();

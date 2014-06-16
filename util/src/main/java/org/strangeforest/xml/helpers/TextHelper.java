@@ -46,7 +46,7 @@ public class TextHelper extends NodeHelper<Text> implements Text {
 	/**
 	 * Returns <tt>short</tt> value of this text node.
 	 * @return <tt>short</tt> value of this text node.
-	 * @throws DOMException
+	 * @throws DOMException if exception occurs.
 	 */
 	public short getShort() throws DOMException {
 		return Short.parseShort(getData());
@@ -55,7 +55,7 @@ public class TextHelper extends NodeHelper<Text> implements Text {
 	/**
 	 * Returns <tt>int</tt> value of this text node.
 	 * @return <tt>int</tt> value of this text node.
-	 * @throws DOMException
+	 * @throws DOMException if exception occurs.
 	 */
 	public int getInt() throws DOMException {
 		return Integer.parseInt(getData());
@@ -64,7 +64,7 @@ public class TextHelper extends NodeHelper<Text> implements Text {
 	/**
 	 * Returns <tt>long</tt> value of this text node.
 	 * @return <tt>long</tt> value of this text node.
-	 * @throws DOMException
+	 * @throws DOMException if exception occurs.
 	 */
 	public long getLong() throws DOMException {
 		return Long.parseLong(getData());
@@ -73,7 +73,7 @@ public class TextHelper extends NodeHelper<Text> implements Text {
 	/**
 	 * Returns <tt>boolean</tt> value of this text node.
 	 * @return <tt>boolean</tt> value of this text node.
-	 * @throws DOMException
+	 * @throws DOMException if exception occurs.
 	 */
 	public boolean getBoolean() throws DOMException {
 		return Boolean.valueOf(getData());
@@ -82,7 +82,7 @@ public class TextHelper extends NodeHelper<Text> implements Text {
 	/**
 	 * Returns <tt>float</tt> value of this text node.
 	 * @return <tt>float</tt> value of this text node.
-	 * @throws DOMException
+	 * @throws DOMException if exception occurs.
 	 */
 	public float getFloat() throws DOMException {
 		return Float.parseFloat(getData());
@@ -91,7 +91,7 @@ public class TextHelper extends NodeHelper<Text> implements Text {
 	/**
 	 * Returns <tt>double</tt> value of this text node.
 	 * @return <tt>double</tt> value of this text node.
-	 * @throws DOMException
+	 * @throws DOMException if exception occurs.
 	 */
 	public double getDouble() throws DOMException {
 		return Double.parseDouble(getData());

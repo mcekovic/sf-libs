@@ -4,7 +4,7 @@ import java.util.*;
 
 /**
  * <p>This is <tt>Iterator</tt> implementation based on <tt>Enumeration</tt> instance.</p>
- * </p>It is also <i>Adapter</i> from <tt>Enumeration</tt> to <tt>Iterator</tt> interface.</p>
+ * <p>It is also <i>Adapter</i> from <tt>Enumeration</tt> to <tt>Iterator</tt> interface.</p>
  */
 public class EnumerationIterator<E> implements Iterator<E> {
 

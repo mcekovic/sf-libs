@@ -1,7 +1,7 @@
 package org.strangeforest.pool;
 
 /**
- * Interface used by <tt>ResourcePool</tt> for managing resources.</p>
+ * Interface used by <tt>ResourcePool</tt> for managing resources.
  */
 public interface ResourceManager<R> {
 

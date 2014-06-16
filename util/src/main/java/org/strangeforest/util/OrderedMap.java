@@ -11,7 +11,7 @@ public interface OrderedMap<K, V> extends Map<K, V> {
 	 * Returns entry at specified index.
 	 * @param index index
 	 * @return entry at specified index.
-	 * @throws IndexOutOfBoundsException if <tt>index < 0 || index >= size()</tt>.
+	 * @throws IndexOutOfBoundsException if <tt>index &lt; 0 || index &gt;= size()</tt>.
 	 */
 	Map.Entry<K, V> getEntry(int index);
 
@@ -34,7 +34,7 @@ public interface OrderedMap<K, V> extends Map<K, V> {
 	 * Returns key at specified index.
 	 * @param index index
 	 * @return key at specified index.
-	 * @throws IndexOutOfBoundsException if <tt>index < 0 || index >= size()</tt>.
+	 * @throws IndexOutOfBoundsException if <tt>index &lt; 0 || index &gt;= size()</tt>.
 	 */
 	K getKey(int index);
 
@@ -57,7 +57,7 @@ public interface OrderedMap<K, V> extends Map<K, V> {
 	 * Returns value at specified index.
 	 * @param index index
 	 * @return value at specified index.
-	 * @throws IndexOutOfBoundsException if <tt>index < 0 || index >= size()</tt>.
+	 * @throws IndexOutOfBoundsException if <tt>index &lt; 0 || index &gt;= size()</tt>.
 	 */
 	V getValue(int index);
 
@@ -93,15 +93,15 @@ public interface OrderedMap<K, V> extends Map<K, V> {
 	 * @param key key
 	 * @param value value
 	 * @return previous entry at the specified index or <tt>null</tt> if <tt>index == size()</tt>.
-	 * @throws IndexOutOfBoundsException if <tt>index < 0 || index > size()</tt>.
+	 * @throws IndexOutOfBoundsException if <tt>index &lt; 0 || index &gt; size()</tt>.
 	 */
 	Map.Entry<K, V> put(int index, K key, V value);
 
 	/**
 	 * Puts new mappings into the map at the specified index.
 	 * @param index index
-	 * @param map Map<K, V> from which to put mappings
-	 * @throws IndexOutOfBoundsException if <tt>index < 0 || index > size()</tt>.
+	 * @param map Map from which to put mappings
+	 * @throws IndexOutOfBoundsException if <tt>index &lt; 0 || index &gt; size()</tt>.
 	 */
 	void putAll(int index, Map<? extends K, ? extends V> map);
 
@@ -126,7 +126,7 @@ public interface OrderedMap<K, V> extends Map<K, V> {
 	 * Removes mapping at the specified index.
 	 * @param index index
 	 * @return entry that has been removed.
-	 * @throws IndexOutOfBoundsException if <tt>index < 0 || index >= size()</tt>.
+	 * @throws IndexOutOfBoundsException if <tt>index &lt; 0 || index &gt;= size()</tt>.
 	 */
 	Map.Entry<K, V> remove(int index);
 
@@ -159,7 +159,7 @@ public interface OrderedMap<K, V> extends Map<K, V> {
 	 * Moves entry with the specified key to the specified position.
 	 * @param key key.
 	 * @param index new position.
-	 * @throws IndexOutOfBoundsException if <tt>index < 0 || index > size()</tt>.
+	 * @throws IndexOutOfBoundsException if <tt>index &lt; 0 || index &gt; size()</tt>.
 	 */
 	void moveTo(K key, int index);
 

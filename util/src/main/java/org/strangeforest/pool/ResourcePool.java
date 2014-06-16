@@ -10,7 +10,7 @@ import java.util.concurrent.*;
  * Note that ResourceManager methods are never called from within synchronized blocks
  * (except from initPool/destroyPool methods), thus maximizing scalability.
  * <p>ResourcePool has following properties:</p>
- * <li><i>InitialPoolSize</i> - Size of pool after initialization with init() method.</li>
+ * <ul><li><i>InitialPoolSize</i> - Size of pool after initialization with init() method.</li>
  * <li><i>MinPoolSize</i> - Idle resources will not be released when pool size is equal or less than MinPoolSize.</li>
  * <li><i>MaxPoolSize</i> - Maximum size of pool. When pool reach maximum size no new resources will be allocated. If zero there is no limit on pool size.</li>
  * <li><i>MinIdleCount</i> - Minimum count of idle resources that are kept allocated and in the pool ready to be served.</li>
@@ -20,7 +20,7 @@ import java.util.concurrent.*;
  * <li><i>MaxIdleTime</i> - After being idle more than MaxIdleTime resources will be released and removed from pool (depending on MinPoolSize parameter).</li>
  * <li><i>MaxBusyTime</i> - Resources held by client more than MaxBusyTime will be released and removed from pool. A value of 0 indicates there is no limit.</li>
  * <li><i>MaxLiveTime</i> - Maximum time a resource can live MaxLiveTime after allocation resource will be released. A value of 0 indicates resource will never be released.</li>
- * <li><i>PropertyCycle</i> - Period of maintenance task scheduling.</li>
+ * <li><i>PropertyCycle</i> - Period of maintenance task scheduling.</li></ul>
  */
 public class ResourcePool<R> {
 
@@ -764,8 +764,8 @@ public class ResourcePool<R> {
 		}
 
 		/**
-		 * Returns <tt>List<tt> of <tt>ResourceInfo</tt> objects.
-		 * @return <tt>List<tt> of <tt>ResourceInfo</tt> objects.
+		 * Returns <tt>List</tt> of <tt>ResourceInfo</tt> objects.
+		 * @return <tt>List</tt> of <tt>ResourceInfo</tt> objects.
 		 */
 		public List<ResourceInfo> getResourceInfos() {
 			return info;
