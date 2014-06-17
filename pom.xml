@@ -260,6 +260,11 @@
 			<name>mcekovic-artifacts-sf-libs</name>
 			<url>https://api.bintray.com/maven/mcekovic/artifacts/sf-libs</url>
 		</repository>
+		<snapshotRepository>
+			<id>bintray</id>
+			<name>mcekovic-artifacts-sf-libs</name>
+			<url>https://api.bintray.com/maven/mcekovic/artifacts/sf-libs</url>
+		</snapshotRepository>
 	</distributionManagement>
 
 </project>
