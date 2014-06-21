@@ -106,18 +106,8 @@ public class TransactionAspect extends AnnotationDrivenAspectSupport<Transaction
 		}
 	}
 
-	@Override protected TransactionalInfo getAnnotationInfo(Transactional tranAnn, TransactionalInfo tranInfo) {
-		if (tranInfo == null)
-			tranInfo = new TransactionalInfo();
-		if (tranAnn != null) {
-			Propagation propagation = tranAnn.propagation();
-			if (propagation != Propagation.REQUIRED)
-				tranInfo.propagation = propagation;
-			boolean rollbackOnly = tranAnn.rollbackOnly();
-			if (rollbackOnly)
-				tranInfo.rollbackOnly = true;
-		}
-		return tranInfo;
+	@Override protected TransactionalInfo createAnnotationInfo() {
+		return new TransactionalInfo();
 	}
 
 	private static final class JoinPointProceedCallback implements TransactionCallback<Object> {
@@ -137,8 +127,18 @@ public class TransactionAspect extends AnnotationDrivenAspectSupport<Transaction
 		}
 	}
 
-	public static final class TransactionalInfo {
+	public static final class TransactionalInfo extends AnnotationInfo<Transactional> {
+
 		private Propagation propagation = Propagation.REQUIRED;
 		private boolean rollbackOnly = false;
+
+		@Override public void updateWithAnnotation(Transactional tranAnn) {
+			Propagation propagation = tranAnn.propagation();
+			if (propagation != Propagation.REQUIRED)
+				this.propagation = propagation;
+			boolean rollbackOnly = tranAnn.rollbackOnly();
+			if (rollbackOnly)
+				this.rollbackOnly = true;
+		}
 	}
 }

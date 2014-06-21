@@ -7,7 +7,7 @@ import java.util.concurrent.*;
 
 import org.aspectj.lang.reflect.*;
 
-public abstract class AnnotationDrivenAspectSupport<A extends Annotation, AI> {
+public abstract class AnnotationDrivenAspectSupport<A extends Annotation, AI extends AnnotationInfo<A>> {
 
 	private final Map<String, AI> annInfoCache = new ConcurrentHashMap<>();
 
@@ -15,16 +15,19 @@ public abstract class AnnotationDrivenAspectSupport<A extends Annotation, AI> {
 		String infoKey = signature.toLongString();
 		AI annInfo = annInfoCache.get(infoKey);
 		if (annInfo == null) {
-			annInfo = getAnnotationInfo((A)signature.getDeclaringType().getAnnotation(annClass), annInfo);
+			annInfo = createAnnotationInfo();
+			A classAnn = (A)signature.getDeclaringType().getAnnotation(annClass);
+			if (classAnn != null)
+				annInfo.updateWithAnnotation(classAnn);
 			Method method = signature.getMethod();
-			annInfo = getAnnotationInfo(method.getAnnotation(annClass), annInfo);
-			updateAnnotationInfo(annInfo, method.getParameterAnnotations());
+			A methodAnn = method.getAnnotation(annClass);
+			if (methodAnn != null)
+				annInfo.updateWithAnnotation(methodAnn);
+			annInfo.updateWithMethodParamsAnnotations(method.getParameterAnnotations());
 			annInfoCache.put(infoKey, annInfo);
 		}
 		return annInfo;
 	}
 
-	protected abstract AI getAnnotationInfo(A ann, AI annInfo);
-
-	protected void updateAnnotationInfo(AI annInfo, Annotation[][] paramAnns) {}
+	protected abstract AI createAnnotationInfo();
 }

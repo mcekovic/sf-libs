@@ -1,8 +1,5 @@
 package org.strangeforest.aspects;
 
-import java.lang.annotation.*;
-import java.util.*;
-
 import org.aspectj.lang.*;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.annotation.Pointcut;
@@ -25,14 +22,14 @@ public class TraceAspect extends AnnotationDrivenAspectSupport<Traceable, TraceA
 		TraceableInfo trcInfo = getAnnotationInfo(signature, Traceable.class);
 		Logger logger = trcInfo.logger;
 		if (logger.isTraceEnabled()) {
-			logger.trace(MethodLoggingUtil.beforeMessage(signature, joinPoint.getArgs(), trcInfo.skipParams, trcInfo.maskParams));
+			logger.trace(trcInfo.beforeMessage(signature, joinPoint.getArgs()));
 			PerformanceInfo perfInfo = trcInfo.trackPerformance ? trackPerformance(signature) : null;
 			long t0 = trcInfo.trackTime || trcInfo.trackPerformance ? System.currentTimeMillis() : 0L;
 			Object retVal = joinPoint.proceed();
 			long dt = trcInfo.trackTime || trcInfo.trackPerformance ? System.currentTimeMillis() - t0 : -1L;
 			if (trcInfo.trackPerformance)
 				perfInfo.after(dt);
-			logger.trace(MethodLoggingUtil.afterMessage(signature, retVal, dt));
+			logger.trace(trcInfo.afterMessage(signature, retVal, dt));
 			return retVal;
 		}
 		else if (trcInfo.trackPerformance) {
@@ -52,52 +49,26 @@ public class TraceAspect extends AnnotationDrivenAspectSupport<Traceable, TraceA
 		return perfInfo;
 	}
 
-	@Override protected TraceableInfo getAnnotationInfo(Traceable trcAnn, TraceableInfo trcInfo) {
-		if (trcInfo == null)
-			trcInfo = new TraceableInfo();
-		if (trcAnn != null) {
-			String loggerName = trcAnn.logger();
-			if (loggerName.length() > 0)
-				trcInfo.logger = LoggerFactory.getLogger(loggerName);
-			boolean trackTime = trcAnn.trackTime();
-			if (trackTime)
-				trcInfo.trackTime = true;
-			boolean trackPerformance = trcAnn.trackPerformance();
-			if (trackPerformance)
-				trcInfo.trackPerformance = true;
-		}
-		return trcInfo;
+	@Override protected TraceableInfo createAnnotationInfo() {
+		return new TraceableInfo();
 	}
 
-	@Override protected void updateAnnotationInfo(TraceableInfo annInfo, Annotation[][] paramsAnns) {
-		for (int i = 0; i < paramsAnns.length; i++) {
-			for (Annotation paramAnn : paramsAnns[i]) {
-				if (paramAnn instanceof Skip)
-					annInfo.skip(i);
-				if (paramAnn instanceof Mask)
-					annInfo.mask(i);
-			}
-		}
-	}
-
-	public static final class TraceableInfo {
+	public static final class TraceableInfo extends MethodLoggingInfo<Traceable> {
 
 		private Logger logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 		private boolean trackTime = false;
 		private boolean trackPerformance = false;
-		private List<Integer> skipParams;
-		private List<Integer> maskParams;
 
-		void skip(int i) {
-			if (skipParams == null)
-				skipParams = new ArrayList<>();
-			skipParams.add(i);
-		}
-
-		void mask(int i) {
-			if (maskParams == null)
-				maskParams = new ArrayList<>();
-			maskParams.add(i);
+		@Override protected void updateWithAnnotation(Traceable trcAnn) {
+			String loggerName = trcAnn.logger();
+			if (loggerName.length() > 0)
+				logger = LoggerFactory.getLogger(loggerName);
+			boolean trackTime = trcAnn.trackTime();
+			if (trackTime)
+				this.trackTime = true;
+			boolean trackPerformance = trcAnn.trackPerformance();
+			if (trackPerformance)
+				this.trackPerformance = true;
 		}
 	}
 }

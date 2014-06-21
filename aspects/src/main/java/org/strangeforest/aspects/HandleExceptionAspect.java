@@ -1,8 +1,5 @@
 package org.strangeforest.aspects;
 
-import java.lang.annotation.*;
-import java.util.*;
-
 import org.aspectj.lang.*;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.annotation.Pointcut;
@@ -27,8 +24,8 @@ public class HandleExceptionAspect extends AnnotationDrivenAspectSupport<HandleE
 		catch (Throwable th) {
 			if (handleExInfo.isInstance(th)) {
 				Logger logger = handleExInfo.logger;
-				if (handleExInfo.logger != null && logger.isErrorEnabled())
-					logger.error(MethodLoggingUtil.beforeMessage(signature, joinPoint.getArgs(), handleExInfo.skipParams, handleExInfo.maskParams), th);
+				if (logger != null && logger.isErrorEnabled())
+					logger.error(handleExInfo.beforeMessage(signature, joinPoint.getArgs()), th);
 				Class<? extends Throwable> wrapInto = handleExInfo.wrapInto;
 				if (wrapInto != null) {
 					if (handleExInfo.strictWrapping)
@@ -41,45 +38,31 @@ public class HandleExceptionAspect extends AnnotationDrivenAspectSupport<HandleE
 		}
 	}
 
-	@Override protected HandleExInfo getAnnotationInfo(HandleException handleExAnn, HandleExInfo handleExInfo) {
-		if (handleExInfo == null)
-			handleExInfo = new HandleExInfo();
-		if (handleExAnn != null) {
-			Class[] exceptions = handleExAnn.exceptions();
-			if (exceptions.length > 0)
-				handleExInfo.exceptions = exceptions;
-			String loggerName = handleExAnn.logger();
-			if (loggerName.length() > 0)
-				handleExInfo.logger = LoggerFactory.getLogger(loggerName);
-			Class<? extends Throwable> wrapInto = handleExAnn.wrapInto();
-			if (!wrapInto.equals(AnnotationUtil.NO_EXCEPTION))
-				handleExInfo.wrapInto = wrapInto;
-			boolean strictWrapping = handleExAnn.strictWrapping();
-			if (strictWrapping)
-				handleExInfo.strictWrapping = true;
-		}
-		return handleExInfo;
+	@Override protected HandleExInfo createAnnotationInfo() {
+		return new HandleExInfo();
 	}
 
-	@Override protected void updateAnnotationInfo(HandleExInfo annInfo, Annotation[][] paramsAnns) {
-		for (int i = 0; i < paramsAnns.length; i++) {
-			for (Annotation paramAnn : paramsAnns[i]) {
-				if (paramAnn instanceof Skip)
-					annInfo.skip(i);
-				if (paramAnn instanceof Mask)
-					annInfo.mask(i);
-			}
-		}
-	}
-
-	public static final class HandleExInfo {
+	public static final class HandleExInfo extends MethodLoggingInfo<HandleException> {
 
 		private Class[] exceptions = new Class[] {Throwable.class};
 		private Logger logger;
 		private Class<? extends Throwable> wrapInto;
 		private boolean strictWrapping = false;
-		private List<Integer> skipParams;
-		private List<Integer> maskParams;
+
+		@Override protected void updateWithAnnotation(HandleException handleExAnn) {
+			Class[] exceptions = handleExAnn.exceptions();
+			if (exceptions.length > 0)
+				this.exceptions = exceptions;
+			String loggerName = handleExAnn.logger();
+			if (loggerName.length() > 0)
+				logger = LoggerFactory.getLogger(loggerName);
+			Class<? extends Throwable> wrapInto = handleExAnn.wrapInto();
+			if (!wrapInto.equals(AnnotationUtil.NO_EXCEPTION))
+				this.wrapInto = wrapInto;
+			boolean strictWrapping = handleExAnn.strictWrapping();
+			if (strictWrapping)
+				this.strictWrapping = true;
+		}
 
 		boolean isInstance(Throwable th) {
 			if (exceptions != null) {
@@ -89,18 +72,6 @@ public class HandleExceptionAspect extends AnnotationDrivenAspectSupport<HandleE
 				}
 			}
 			return false;
-		}
-
-		void skip(int i) {
-			if (skipParams == null)
-				skipParams = new ArrayList<>();
-			skipParams.add(i);
-		}
-
-		void mask(int i) {
-			if (maskParams == null)
-				maskParams = new ArrayList<>();
-			maskParams.add(i);
 		}
 	}
 }
