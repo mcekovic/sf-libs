@@ -40,18 +40,15 @@ public class RetriedAspect extends AnnotationDrivenAspectSupport<Retried, Retrie
 
 	public static final class RetriedInfo extends MethodLoggingInfo<Retried> {
 
-		private Logger logger;
 		private Class[] exceptions = new Class[] {Throwable.class};
 		private int count;
 
-		@Override public void updateWithAnnotation(Retried retriedAnn) {
+		@Override public void withAnnotation(Retried retriedAnn) {
 			Class[] exceptions = retriedAnn.exceptions();
 			if (exceptions.length > 0)
 				this.exceptions = exceptions;
 			count = retriedAnn.count();
-			String loggerName = retriedAnn.logger();
-			if (loggerName.length() > 0)
-				logger = LoggerFactory.getLogger(loggerName);
+			withLogger(retriedAnn.logger());
 		}
 
 		public boolean isInstance(Throwable th) {

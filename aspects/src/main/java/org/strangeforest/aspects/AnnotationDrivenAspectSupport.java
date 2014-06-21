@@ -11,19 +11,21 @@ public abstract class AnnotationDrivenAspectSupport<A extends Annotation, AI ext
 
 	private final Map<String, AI> annInfoCache = new ConcurrentHashMap<>();
 
-	public AI getAnnotationInfo(MethodSignature signature, Class<A> annClass) {
+	protected AI getAnnotationInfo(MethodSignature signature, Class<A> annClass) {
 		String infoKey = signature.toLongString();
 		AI annInfo = annInfoCache.get(infoKey);
 		if (annInfo == null) {
 			annInfo = createAnnotationInfo();
-			A classAnn = (A)signature.getDeclaringType().getAnnotation(annClass);
+			Class declaringType = signature.getDeclaringType();
+			annInfo.withType(declaringType);
+			A classAnn = (A)declaringType.getAnnotation(annClass);
 			if (classAnn != null)
-				annInfo.updateWithAnnotation(classAnn);
+				annInfo.withAnnotation(classAnn);
 			Method method = signature.getMethod();
 			A methodAnn = method.getAnnotation(annClass);
 			if (methodAnn != null)
-				annInfo.updateWithAnnotation(methodAnn);
-			annInfo.updateWithMethodParamsAnnotations(method.getParameterAnnotations());
+				annInfo.withAnnotation(methodAnn);
+			annInfo.withMethodParamsAnnotations(method.getParameterAnnotations());
 			annInfoCache.put(infoKey, annInfo);
 		}
 		return annInfo;

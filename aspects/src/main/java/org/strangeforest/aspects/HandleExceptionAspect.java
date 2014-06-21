@@ -45,17 +45,14 @@ public class HandleExceptionAspect extends AnnotationDrivenAspectSupport<HandleE
 	public static final class HandleExInfo extends MethodLoggingInfo<HandleException> {
 
 		private Class[] exceptions = new Class[] {Throwable.class};
-		private Logger logger;
 		private Class<? extends Throwable> wrapInto;
-		private boolean strictWrapping = false;
+		private boolean strictWrapping;
 
-		@Override protected void updateWithAnnotation(HandleException handleExAnn) {
+		@Override public void withAnnotation(HandleException handleExAnn) {
 			Class[] exceptions = handleExAnn.exceptions();
 			if (exceptions.length > 0)
 				this.exceptions = exceptions;
-			String loggerName = handleExAnn.logger();
-			if (loggerName.length() > 0)
-				logger = LoggerFactory.getLogger(loggerName);
+			withLogger(handleExAnn.logger());
 			Class<? extends Throwable> wrapInto = handleExAnn.wrapInto();
 			if (!wrapInto.equals(AnnotationUtil.NO_EXCEPTION))
 				this.wrapInto = wrapInto;

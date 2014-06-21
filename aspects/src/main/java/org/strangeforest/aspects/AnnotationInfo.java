@@ -4,6 +4,7 @@ import java.lang.annotation.*;
 
 public abstract class AnnotationInfo<A extends Annotation> {
 
-	protected abstract void updateWithAnnotation(A ann);
-	protected void updateWithMethodParamsAnnotations(Annotation[][] paramsAnns) {}
+	public void withType(Class type) {}
+	public abstract void withAnnotation(A ann);
+	public void withMethodParamsAnnotations(Annotation[][] paramsAnns) {}
 }

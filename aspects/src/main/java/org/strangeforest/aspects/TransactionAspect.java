@@ -132,7 +132,7 @@ public class TransactionAspect extends AnnotationDrivenAspectSupport<Transaction
 		private Propagation propagation = Propagation.REQUIRED;
 		private boolean rollbackOnly = false;
 
-		@Override public void updateWithAnnotation(Transactional tranAnn) {
+		@Override public void withAnnotation(Transactional tranAnn) {
 			Propagation propagation = tranAnn.propagation();
 			if (propagation != Propagation.REQUIRED)
 				this.propagation = propagation;

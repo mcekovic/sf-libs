@@ -5,15 +5,33 @@ import java.time.*;
 import java.util.*;
 
 import org.aspectj.lang.reflect.*;
+import org.slf4j.*;
 import org.strangeforest.annotation.*;
 import org.strangeforest.util.*;
 
+import static org.strangeforest.annotation.AnnotationUtil.*;
+
 public abstract class MethodLoggingInfo<A extends Annotation> extends AnnotationInfo<A> {
 
+	private Class type;
+	Logger logger;
 	List<Integer> skipParams;
 	List<Integer> maskParams;
 
-	@Override public void updateWithMethodParamsAnnotations(Annotation[][] paramsAnns) {
+	@Override public void withType(Class type) {
+		this.type = type;
+	}
+
+	protected void withLogger(String logger) {
+		if (logger.length() > 0) {
+			if (logger.equals(DEFAULT_LOGGER_NAME))
+				this.logger = LoggerFactory.getLogger(type);
+			else
+				this.logger = LoggerFactory.getLogger(logger);
+		}
+	}
+
+	@Override public void withMethodParamsAnnotations(Annotation[][] paramsAnns) {
 		for (int i = 0; i < paramsAnns.length; i++) {
 			for (Annotation paramAnn : paramsAnns[i]) {
 				if (paramAnn instanceof Skip)

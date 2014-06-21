@@ -55,14 +55,11 @@ public class TraceAspect extends AnnotationDrivenAspectSupport<Traceable, TraceA
 
 	public static final class TraceableInfo extends MethodLoggingInfo<Traceable> {
 
-		private Logger logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 		private boolean trackTime = false;
 		private boolean trackPerformance = false;
 
-		@Override protected void updateWithAnnotation(Traceable trcAnn) {
-			String loggerName = trcAnn.logger();
-			if (loggerName.length() > 0)
-				logger = LoggerFactory.getLogger(loggerName);
+		@Override public void withAnnotation(Traceable trcAnn) {
+			withLogger(trcAnn.logger());
 			boolean trackTime = trcAnn.trackTime();
 			if (trackTime)
 				this.trackTime = true;
