@@ -16,7 +16,7 @@
 		<connection>${base.scm.url}/util</connection>
 		<developerConnection>${base.scm.url}/util</developerConnection>
 		<url>${base.browse.url}/util</url>
-	  <tag>HEAD</tag>
+	   <tag>HEAD</tag>
   </scm>
 
 	<dependencies>

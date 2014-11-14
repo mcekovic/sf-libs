@@ -16,7 +16,7 @@
 		<connection>${base.scm.url}/aspects</connection>
 		<developerConnection>${base.scm.url}/aspects</developerConnection>
 		<url>${base.browse.url}/aspects</url>
-	  <tag>HEAD</tag>
+	   <tag>HEAD</tag>
   </scm>
 
 	<dependencies>

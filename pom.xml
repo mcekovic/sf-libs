@@ -26,7 +26,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
-		<aspectj.version>1.8.3</aspectj.version>
+		<aspectj.version>1.8.4</aspectj.version>
 		<slf4j.version>1.7.7</slf4j.version>
 		<base.scm.url>scm:git:git@github.com:mcekovic/sf-libs.git</base.scm.url>
 		<base.browse.url>https://github.com/mcekovic/sf-libs</base.browse.url>
@@ -44,7 +44,6 @@
 		<connection>${base.scm.url}</connection>
 		<developerConnection>${base.scm.url}</developerConnection>
 		<url>${base.browse.url}</url>
-	  <tag>HEAD</tag>
   </scm>
 
 	<build>
