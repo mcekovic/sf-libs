@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>org.strangeforest.libs</groupId>
 	<artifactId>sf-libs</artifactId>
 	<packaging>pom</packaging>
@@ -32,7 +32,6 @@
 		<base.browse.url>https://github.com/mcekovic/sf-libs</base.browse.url>
 		<github.global.server>github</github.global.server>
 	</properties>
-
 
 	<modules>
 		<module>util</module>
