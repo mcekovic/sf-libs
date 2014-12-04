@@ -40,6 +40,7 @@ public class ResourcePool<R> {
 	private Deque<PooledResource<R>> idlePool;
 	private Map<R, PooledResource<R>> busyPool;
 	private Set<PooledResource<R>> dirtyPool;
+	private volatile boolean initialized;
 	private ScheduledFuture housekeeperFuture;
 	private ResourcePoolLogger logger;
 
@@ -94,6 +95,7 @@ public class ResourcePool<R> {
 		idlePool = new LinkedList<>();
 		busyPool = new HashMap<>(maxPoolSize);
 		dirtyPool = new HashSet<>();
+		initialized = true;
 		scheduleHousekeeper();
 		preallocate(initialPoolSize);
 	}
@@ -139,9 +141,7 @@ public class ResourcePool<R> {
 		if (isInitialized()) {
 			cancelHousekeeper();
 			releaseResources(false);
-			idlePool = null;
-			busyPool = null;
-			dirtyPool = null;
+			initialized = false;
 		}
 	}
 
@@ -157,16 +157,16 @@ public class ResourcePool<R> {
 	}
 
 	protected boolean isInitialized() {
-		return idlePool != null;
+		return initialized;
 	}
 
 	private void checkIfInitialized() {
-		if (idlePool == null)
+		if (!initialized)
 			throw new IllegalStateException("Pool is not initialized.");
 	}
 
 	private void checkIfNotInitialized() {
-		if (idlePool != null)
+		if (initialized)
 			throw new IllegalStateException("Pool is already initialized.");
 	}
 
