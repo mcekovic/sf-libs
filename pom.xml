@@ -116,6 +116,7 @@
 					<version>2.5</version>
 					<configuration>
 						<tagBase>${base.browse.url}.git/releases</tagBase>
+						<username>mcekovic</username>
 					</configuration>
 				</plugin>
 				<plugin>
