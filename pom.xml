@@ -117,6 +117,7 @@
 					<configuration>
 						<tagBase>${base.browse.url}.git/releases</tagBase>
 						<username>mcekovic</username>
+						<password>Chicker5</password>
 					</configuration>
 				</plugin>
 				<plugin>
