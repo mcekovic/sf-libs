@@ -3,20 +3,20 @@
 	<parent>
 		<groupId>org.strangeforest.libs</groupId>
 		<artifactId>sf-libs</artifactId>
-		<version>1.0.2-SNAPSHOT</version>
+		<version>1.0.2</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>sf-db</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.2</version>
 	<name>Strange Forest DB Library</name>
 
 	<scm>
 		<connection>${base.scm.url}/db</connection>
 		<developerConnection>${base.scm.url}/db</developerConnection>
 		<url>${base.browse.url}/db</url>
-	   <tag>HEAD</tag>
+	   <tag>sf-libs-1.0.2</tag>
   </scm>
 
 	<build>
