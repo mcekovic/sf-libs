@@ -5,7 +5,7 @@
 	<groupId>org.strangeforest.libs</groupId>
 	<artifactId>sf-libs</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.3</version>
+	<version>1.0.4-SNAPSHOT</version>
 	<name>Strange Forest Libraries</name>
 	<url>${base.browse.url}</url>
 
@@ -43,7 +43,7 @@
 		<connection>${base.scm.url}</connection>
 		<developerConnection>${base.scm.url}</developerConnection>
 		<url>${base.browse.url}</url>
-		<tag>sf-libs-1.0.3</tag>
+		<tag>HEAD</tag>
   </scm>
 
 	<build>
