@@ -13,13 +13,13 @@ import static org.strangeforest.db.gateway.NamedParameters.*;
 import static org.strangeforest.db.gateway.Parameter.*;
 import static org.testng.Assert.*;
 
-public class DBGatewayIT {
+public class DBGatewayTest {
 
 	private ConnectionPoolDataSource dataSource;
 	private DBGateway db;
 
 	private static final String DRIVER_CLASS = "org.h2.Driver";
-	private static final String DB_URL = "jdbc:h2:~/.sf-db/data/test-dbgateway";
+	private static final String DB_URL = "jdbc:h2:mem:test";
 	private static final String USERNAME = "SA";
 	private static final String PASSWORD = "SA";
 

@@ -19,7 +19,7 @@
 	</issueManagement>
 
 	<prerequisites>
-		<maven>3.2.3</maven>
+		<maven>3.2.5</maven>
 	</prerequisites>
 
 	<properties>
@@ -222,7 +222,7 @@
 			<dependency>
 				<groupId>com.h2database</groupId>
 				<artifactId>h2</artifactId>
-				<version>1.4.183</version>
+				<version>1.4.184</version>
 			</dependency>
 			<dependency>
 				<groupId>org.hamcrest</groupId>
@@ -251,7 +251,7 @@
 			<dependency>
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-all</artifactId>
-				<version>1.10.17</version>
+				<version>1.10.19</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
