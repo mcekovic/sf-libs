@@ -97,7 +97,7 @@ public abstract class TransactionManager {
 	}
 
 	public static void resume(Transaction tran) {
-		if (isInTransaction())
+		if (tran != transaction.get())
 			throw new IllegalStateException("Cannot resume while in another transaction.");
 		tran.resume();
 	}

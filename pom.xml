@@ -26,8 +26,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
-		<aspectj.version>1.8.4</aspectj.version>
-		<slf4j.version>1.7.9</slf4j.version>
+		<aspectj.version>1.8.5</aspectj.version>
+		<slf4j.version>1.7.10</slf4j.version>
 		<base.scm.url>scm:git:git@github.com:mcekovic/sf-libs.git</base.scm.url>
 		<base.browse.url>https://github.com/mcekovic/sf-libs</base.browse.url>
 		<github.global.server>github</github.global.server>
@@ -222,7 +222,7 @@
 			<dependency>
 				<groupId>com.h2database</groupId>
 				<artifactId>h2</artifactId>
-				<version>1.4.184</version>
+				<version>1.4.185</version>
 			</dependency>
 			<dependency>
 				<groupId>org.hamcrest</groupId>
@@ -239,7 +239,7 @@
 			<dependency>
 				<groupId>org.testng</groupId>
 				<artifactId>testng</artifactId>
-				<version>6.8.13</version>
+				<version>6.8.21</version>
 				<scope>test</scope>
 				<exclusions>
 					<exclusion>
