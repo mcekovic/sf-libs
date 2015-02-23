@@ -18,7 +18,7 @@ public class LRUCache<K, V> extends AbstractMap<K, V> implements Cache<K, V> {
 	private long expiryPeriod;
 	private long gets;
 	private long hits;
-	private Set<CacheListener<K, V>> listeners;
+	private List<CacheListener<K, V>> listeners;
 	protected final LinkedValue<K, V> header;
 
 	/**
@@ -146,7 +146,7 @@ public class LRUCache<K, V> extends AbstractMap<K, V> implements Cache<K, V> {
 
 	@Override public void addCacheListener(CacheListener<K, V> listener) {
 		if (listeners == null)
-			listeners = new LinkedHashSet<>();
+			listeners = new ArrayList<>(4);
 		listeners.add(listener);
 	}
 
