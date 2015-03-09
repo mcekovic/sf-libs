@@ -34,9 +34,9 @@
 	</properties>
 
 	<modules>
-		<module>util</module>
-		<module>db</module>
-		<module>aspects</module>
+		<module>sf-util</module>
+		<module>sf-db</module>
+		<module>sf-aspects</module>
 	</modules>
 
 	<scm>
