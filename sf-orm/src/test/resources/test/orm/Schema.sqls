@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns="http://www.strangeforest.org/schema/db">
+
+<sql-group name="test">
+
+	<sql name="Create_TSAggregate">
+		CREATE TABLE TSAggregate (
+			IDTSAggregate BIGINT AUTO_INCREMENT PRIMARY KEY,
+			Name VARCHAR(100) NOT NULL,
+			IDTSEntity BIGINT NULL,
+			IDTSAggregate_Related BIGINT NULL
+		)
+	</sql>
+
+	<sql name="Create_TSEntity">
+		CREATE TABLE TSEntity (
+			IDTSEntity BIGINT AUTO_INCREMENT PRIMARY KEY,
+			IDTSAggregate BIGINT NOT NULL,
+			Name VARCHAR(100) NULL,
+			Description VARCHAR(4000) NULL
+		)
+	</sql>
+
+	<sql name="Create_TSDetail">
+		CREATE TABLE TSDetail (
+			IDTSEntity BIGINT NOT NULL,
+			DetailID INT NOT NULL,
+			Name VARCHAR(100) NULL,
+			PRIMARY KEY(IDTSEntity, DetailID)
+		)
+	</sql>
+
+	<sql name="Create_TSSimpleEntity">
+		CREATE TABLE TSSimpleEntity (
+			IDTSSimpleEntity BIGINT AUTO_INCREMENT PRIMARY KEY,
+			Name VARCHAR(100) NULL
+		)
+	</sql>
+
+	<sql name="Create_XTSAggregate_IDTSEntity">
+		CREATE INDEX XTSAggregate_IDTSEntity ON TSAggregate (IDTSEntity ASC)
+	</sql>
+
+	<sql name="Create_XTSAggregate_IDTSAggregate">
+		CREATE INDEX XTSAggregate_IDTSAggregate ON TSAggregate (IDTSAggregate_Related ASC)
+	</sql>
+
+	<sql name="Create_XTSEntity_IDTSAggregate">
+		CREATE INDEX XTSEntity_IDTSAggregate ON TSEntity (IDTSAggregate ASC)
+	</sql>
+
+	<sql name="Create_XTSDetail_IDTSEntity">
+		CREATE INDEX XTSDetail_IDTSEntity ON TSDetail (IDTSEntity ASC)
+	</sql>
+
+	<sql name="Create_FKTSAggregate_IDTSEntity">
+		ALTER TABLE TSAggregate ADD CONSTRAINT FKTSAggregate_IDTSEntity
+			FOREIGN KEY (IDTSEntity) REFERENCES TSEntity (IDTSEntity) ON DELETE SET NULL
+	</sql>
+
+	<sql name="Create_FKTSAggregate_IDTSAggregate">
+		ALTER TABLE TSAggregate ADD CONSTRAINT FKTSAggregate_IDTSAggregate
+			FOREIGN KEY (IDTSAggregate) REFERENCES TSAggregate (IDTSAggregate)
+	</sql>
+
+	<sql name="Create_FKTSEntity_IDTSAggregate">
+		ALTER TABLE TSEntity ADD CONSTRAINT FKTSEntity_IDTSAggregate
+			FOREIGN KEY (IDTSAggregate) REFERENCES TSAggregate (IDTSAggregate) ON DELETE CASCADE
+	</sql>
+
+	<sql name="Create_FKTSDetail_IDTSEntity">
+		ALTER TABLE TSDetail ADD CONSTRAINT FKTSDetail_IDTSEntity
+			FOREIGN KEY (IDTSEntity) REFERENCES TSEntity (IDTSEntity) ON DELETE CASCADE
+	</sql>
+
+	<sql name="Drop_TSSimpleEntity">
+		DROP TABLE TSSimpleEntity CASCADE CONSTRAINTS
+	</sql>
+
+	<sql name="Drop_TSDetail">
+		DROP TABLE TSDetail CASCADE CONSTRAINTS
+	</sql>
+
+	<sql name="Drop_TSEntity">
+		DROP TABLE TSEntity CASCADE CONSTRAINTS
+	</sql>
+
+	<sql name="Drop_TSAggregate">
+		DROP TABLE TSAggregate CASCADE CONSTRAINTS
+	</sql>
+
+</sql-group>
+
+</sqls>

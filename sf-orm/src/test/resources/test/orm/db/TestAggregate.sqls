@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns="http://www.strangeforest.org/schema/db">
+
+<sql-group name="TestAggregate">
+
+	<sql name="Columns">
+		a.IDTSAggregate, a.Name, a.IDTSEntity, a.IDTSAggregate_Related
+	</sql>
+
+	<sql name="Fetch">
+		SELECT <include name="Columns"/>
+		FROM TSAggregate a
+		WHERE a.IDTSAggregate = :pIDTSAggregate
+	</sql>
+
+	<sql name="FetchAll">
+		SELECT <include name="Columns"/>
+		FROM TSAggregate a
+		ORDER BY IDTSAggregate
+	</sql>
+
+	<sql name="FetchByName">
+		SELECT <include name="Columns"/>
+		FROM TSAggregate a
+		WHERE a.Name = ?
+	</sql>
+
+	<sql name="Create">
+		INSERT INTO TSAggregate (Name, IDTSEntity, IDTSAggregate_Related)
+		VALUES (:pName, :pIDTSEntity, :pIDTSAggregate_Related)
+	</sql>
+
+	<sql name="Save">
+		UPDATE TSAggregate SET
+		Name = :pName, IDTSEntity = :pIDTSEntity, IDTSAggregate_Related = :pIDTSAggregate_Related
+		WHERE IDTSAggregate = :pIDTSAggregate
+	</sql>
+
+	<sql name="Delete">
+		DELETE FROM TSAggregate
+		WHERE IDTSAggregate = :pIDTSAggregate
+	</sql>
+
+</sql-group>
+
+</sqls>

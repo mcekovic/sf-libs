@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns="http://www.strangeforest.org/schema/db">
+
+<sql-group name="SimpleTestEntity">
+
+	<sql name="Columns">
+		e.IDTSSimpleEntity, e.Name
+	</sql>
+
+	<sql name="Fetch">
+		SELECT <include name="Columns"/>
+		FROM TSSimpleEntity e
+		WHERE e.IDTSSimpleEntity = :pIDTSSimpleEntity
+	</sql>
+
+	<sql name="FetchAll">
+		SELECT <include name="Columns"/>
+		FROM TSSimpleEntity e
+		ORDER BY IDTSSimpleEntity
+	</sql>
+
+
+	<sql name="Create">
+		INSERT INTO TSSimpleEntity (Name)
+		VALUES (:pName)
+	</sql>
+
+	<sql name="Save">
+		UPDATE TSSimpleEntity
+		SET Name = :pName
+		WHERE IDTSSimpleEntity = :pIDTSSimpleEntity
+	</sql>
+
+	<sql name="Delete">
+		DELETE FROM TSSimpleEntity
+		WHERE IDTSSimpleEntity = :pIDTSSimpleEntity
+	</sql>
+
+</sql-group>
+
+</sqls>

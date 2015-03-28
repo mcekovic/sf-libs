@@ -16,9 +16,5 @@ public abstract class OrderedByIdPredicatedQuery<I, E extends DomainEntity<I, E>
 		return ID_COMPARATOR;
 	}
 
-	private static final Comparator ID_COMPARATOR = new Comparator() {
-		@Override public int compare(Object o1, Object o2) {
-			return ((Comparable)o1).compareTo(o2);
-		}
-	};
+	private static final Comparator ID_COMPARATOR = (o1, o2) -> ((Comparable)o1).compareTo(o2);
 }

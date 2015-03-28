@@ -11,13 +11,13 @@ import org.testng.annotations.*;
 
 import static org.testng.Assert.*;
 
-public class ConnectionPoolIT {
+public class ConnectionPoolTest {
 
 	private static ConnectionPoolDataSource dataSource;
 	private static List<Connection> conns;
 
 	private static final String DRIVER_CLASS = "org.h2.Driver";
-	private static final String DB_URL = "jdbc:h2:~/.sf-db/data/test-dbgateway";
+	private static final String DB_URL = "jdbc:h2:mem:test";
 	private static final String USERNAME = "SA";
 	private static final String PASSWORD = "SA";
 

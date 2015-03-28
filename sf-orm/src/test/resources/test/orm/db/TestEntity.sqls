@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns="http://www.strangeforest.org/schema/db">
+
+<sql-group name="TestEntity">
+
+	<sql name="Columns">
+		e.IDTSEntity, e.IDTSAggregate, e.Name, e.Description
+	</sql>
+
+	<sql name="Fetch">
+		SELECT <include name="Columns"/>
+		FROM TSEntity e
+		WHERE e.IDTSEntity = :pIDTSEntity
+	</sql>
+
+	<sql name="FetchAll">
+		SELECT <include name="Columns"/>
+		FROM TSEntity e
+		ORDER BY IDTSEntity
+	</sql>
+
+	<sql name="FetchForName">
+		SELECT <include name="Columns"/>
+		FROM TSEntity e
+		WHERE e.Name = :pName
+		ORDER BY IDTSEntity
+	</sql>
+
+	<sql name="FetchForAggregate">
+		SELECT <include name="Columns"/>
+		FROM TSEntity e
+		WHERE e.IDTSAggregate = ?
+		ORDER BY IDTSEntity
+	</sql>
+
+	<sql name="Create">
+		INSERT INTO TSEntity (IDTSAggregate, Name, Description)
+		VALUES (:pIDTSAggregate, :pName, :pDescription)
+	</sql>
+
+	<sql name="Save">
+		UPDATE TSEntity
+		SET IDTSAggregate = :pIDTSAggregate, Name = :pName, Description = :pDescription
+		WHERE IDTSEntity = :pIDTSEntity
+	</sql>
+
+	<sql name="SaveOptimized">
+		UPDATE TSEntity
+		SET Name = :pName
+		WHERE IDTSEntity = :pIDTSEntity
+	</sql>
+
+	<sql name="Delete">
+		DELETE FROM TSEntity
+		WHERE IDTSEntity = :pIDTSEntity
+	</sql>
+
+</sql-group>
+
+<sql-group name="TestDetail">
+
+	<sql name="TestDetailFetchAll">
+		SELECT DetailID, Name
+		FROM TSDetail
+		WHERE IDTSEntity = :pIDTSEntity
+		ORDER BY DetailID
+	</sql>
+
+	<sql name="TestDetailCreate">
+		INSERT INTO TSDetail (IDTSEntity, DetailID, Name)
+		VALUES (:pIDTSEntity, :pDetailID, :pName)
+	</sql>
+
+	<sql name="TestDetailDelete">
+		DELETE FROM TSDetail
+		WHERE IDTSEntity = :pIDTSEntity AND DetailID = :pDetailID
+	</sql>
+
+	<sql name="TestDetailDeleteAll">
+		DELETE FROM TSDetail
+		WHERE IDTSEntity = :pIDTSEntity
+	</sql>
+
+</sql-group>
+
+</sqls>

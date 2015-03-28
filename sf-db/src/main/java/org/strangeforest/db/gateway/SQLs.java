@@ -43,6 +43,25 @@ public class SQLs {
 		loadFromStream(inputStream);
 	}
 
+	public SQLs(Class cls, String sqlsName) {
+		this();
+		hotSwap = false;
+		InputStream in = cls.getResourceAsStream(sqlsName);
+		if (in != null) {
+			try {
+				loadFromStream(in);
+			}
+			finally {
+				try {
+					in.close();
+				}
+				catch (IOException ignored) {}
+			}
+		}
+		else
+			throw new DBException("Cannot find SQLs: " + sqlsName);
+	}
+
 	public SQLs(String sqls) {
 		this(new ByteArrayInputStream(sqls.getBytes()));
 	}

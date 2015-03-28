@@ -32,7 +32,7 @@ public abstract class QueryStatementPreparer {
 			return null;
 	}
 
-	public static  void setParameter(PreparedStatementHelper st, int index, Object value) throws SQLException {
+	public static void setParameter(PreparedStatementHelper st, int index, Object value) throws SQLException {
 		if (value instanceof Boolean)
 			st.setInt(index, (Boolean)value ? -1 : 0);
 		else if (value instanceof Enum)
