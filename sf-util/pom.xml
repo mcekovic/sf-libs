@@ -13,9 +13,9 @@
 	<name>Strange Forest Util Library</name>
 
 	<scm>
-		<connection>${base.scm.url}/util</connection>
-		<developerConnection>${base.scm.url}/util</developerConnection>
-		<url>${base.browse.url}/util</url>
+		<connection>${base.scm.url}/${project.artifactId}</connection>
+		<developerConnection>${base.scm.url}/${project.artifactId}</developerConnection>
+		<url>${base.browse.url}/${project.artifactId}</url>
 		<tag>HEAD</tag>
   </scm>
 

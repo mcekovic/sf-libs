@@ -85,7 +85,7 @@ public abstract class BeanUtil {
 					Method readMethod = sourceDesc.getReadMethod();
 					if (sourceDesc.getReadMethod() != null) {
 						try {
-							Object value = readMethod.invoke(source, null);
+							Object value = readMethod.invoke(source);
 							if (propertyFunction != null)
 								value = propertyFunction.apply(value);
 							writeMethod.invoke(target, value);
@@ -102,17 +102,17 @@ public abstract class BeanUtil {
 	private static final Set<String> DEFAULT_SKIP_PROPERTIES = Collections.singleton("class");
 
 	public static Map<String, Object> toMap(Object bean) {
-		return toMap(bean, null);
+		return toMap(bean);
 	}
 
 	public static Map<String, Object> toMap(Object bean, String... ignoreProperties) {
 		Map<String, Object> map = new HashMap<>();
-		List<String> ignoreList = ignoreProperties != null ? Arrays.asList(ignoreProperties) : null;
+		List<String> ignoreList = Arrays.asList(ignoreProperties);
 		for (PropertyDescriptor desc : getPropertyDescriptors(bean.getClass())) {
 			String name = desc.getName();
 			if (DEFAULT_SKIP_PROPERTIES.contains(name))
 				continue;
-			if (ignoreProperties != null && ignoreList.contains(name))
+			if (ignoreList.contains(name))
 				continue;
 			map.put(name, getProperty(bean, name));
 		}

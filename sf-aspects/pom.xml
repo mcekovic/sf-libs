@@ -13,9 +13,9 @@
 	<name>Strange Forest Aspects Library</name>
 
 	<scm>
-		<connection>${base.scm.url}/aspects</connection>
-		<developerConnection>${base.scm.url}/aspects</developerConnection>
-		<url>${base.browse.url}/aspects</url>
+		<connection>${base.scm.url}/${project.artifactId}</connection>
+		<developerConnection>${base.scm.url}/${project.artifactId}</developerConnection>
+		<url>${base.browse.url}/${project.artifactId}</url>
 	   <tag>HEAD</tag>
   </scm>
 

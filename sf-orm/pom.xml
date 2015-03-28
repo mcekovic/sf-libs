@@ -7,10 +7,10 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>sf-db</artifactId>
+	<artifactId>sf-orm</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0.4-SNAPSHOT</version>
-	<name>Strange Forest DB Library</name>
+	<name>Strange Forest ORM Library</name>
 
 	<scm>
 		<connection>${base.scm.url}/${project.artifactId}</connection>
@@ -41,6 +41,14 @@
 			<artifactId>sf-util</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.strangeforest.libs</groupId>
+			<artifactId>sf-db</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.strangeforest.libs</groupId>
+			<artifactId>sf-aspects</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<optional>true</optional>
@@ -49,6 +57,10 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.testng</groupId>

@@ -27,7 +27,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<aspectj.version>1.8.5</aspectj.version>
-		<slf4j.version>1.7.10</slf4j.version>
+		<slf4j.version>1.7.12</slf4j.version>
 		<base.scm.url>scm:git:git@github.com:mcekovic/sf-libs.git</base.scm.url>
 		<base.browse.url>https://github.com/mcekovic/sf-libs</base.browse.url>
 		<github.global.server>github</github.global.server>
@@ -37,6 +37,7 @@
 		<module>sf-util</module>
 		<module>sf-db</module>
 		<module>sf-aspects</module>
+		<module>sf-orm</module>
 	</modules>
 
 	<scm>
@@ -200,6 +201,11 @@
 				<version>[1.0.3,]</version>
 			</dependency>
 			<dependency>
+				<groupId>org.strangeforest.libs</groupId>
+				<artifactId>sf-aspects</artifactId>
+				<version>[1.0.3,]</version>
+			</dependency>
+			<dependency>
 				<groupId>org.aspectj</groupId>
 				<artifactId>aspectjrt</artifactId>
 				<version>${aspectj.version}</version>
@@ -220,9 +226,14 @@
 				<version>1.1.2</version>
 			</dependency>
 			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>3.3.2</version>
+			</dependency>
+			<dependency>
 				<groupId>com.h2database</groupId>
 				<artifactId>h2</artifactId>
-				<version>1.4.185</version>
+				<version>1.4.186</version>
 			</dependency>
 			<dependency>
 				<groupId>org.hamcrest</groupId>
