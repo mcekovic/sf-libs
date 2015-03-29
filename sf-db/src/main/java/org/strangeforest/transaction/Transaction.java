@@ -123,7 +123,7 @@ public class Transaction {
 
 	public void registerSynchronization(TransactionSynchronization synchronization) {
 		if (synchronizations == null)
-			synchronizations = new ArrayList<TransactionSynchronization>(4);
+			synchronizations = new ArrayList<>(4);
 		synchronizations.add(synchronization);
 	}
 

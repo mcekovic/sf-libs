@@ -67,9 +67,9 @@ public class DomainContext {
 
 	public static <I, E extends DomainEntity<I, E>> List<I> getIds(Iterable<E> entities) {
 		if (entities instanceof EntityReferenceList)
-			return new ArrayList<I>(((EntityReferenceList<I, E>)entities).ids());
+			return new ArrayList<>(((EntityReferenceList<I, E>)entities).ids());
 		else {
-			List<I> ids = entities instanceof Collection ? new ArrayList<I>(((Collection)entities).size()) : new ArrayList<I>();
+			List<I> ids = entities instanceof Collection ? new ArrayList<>(((Collection)entities).size()) : new ArrayList<>();
 			for (E entity : entities)
 				ids.add(entity.getId());
 			return ids;

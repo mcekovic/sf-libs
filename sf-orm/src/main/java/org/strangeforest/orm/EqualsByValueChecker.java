@@ -220,7 +220,7 @@ class EqualsByValueChecker {
 
 	// Cyclic object graphs detection
 
-	private static final ThreadLocal<Set<Pair<IDKey, IDKey>>> REGISTRY = new ThreadLocal<Set<Pair<IDKey, IDKey>>>();
+	private static final ThreadLocal<Set<Pair<IDKey, IDKey>>> REGISTRY = new ThreadLocal<>();
 
 	private static Set<Pair<IDKey, IDKey>> getRegistry() {
 		return REGISTRY.get();

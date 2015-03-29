@@ -14,7 +14,7 @@ public class StreamingIterator<T> implements Iterator<T> {
 	private static final Object END_MARKER = new Object();
 
 	public StreamingIterator(int bufferSize) {
-		this(new ArrayBlockingQueue<T>(bufferSize+1));
+		this(new ArrayBlockingQueue<>(bufferSize+1));
 	}
 
 	public StreamingIterator(BlockingQueue<T> buffer) {

@@ -104,7 +104,7 @@ public class ORMDBGateway extends DBGateway {
 	}
 
 	public <I, E extends Entity<I>> Set<I> fetchIdSet(String sql, EntityReader<I, E> reader, SQLTransformer transformer, StatementPreparer preparer) {
-		Set<I> ids = new LinkedHashSet<I>();
+		Set<I> ids = new LinkedHashSet<>();
 		fetchIdCollection(ids, sql, reader, transformer, preparer);
 		return ids;
 	}
@@ -122,7 +122,7 @@ public class ORMDBGateway extends DBGateway {
 	}
 
 	public <I, E extends Entity<I>> List<I> fetchIdList(String sql, EntityReader<I, E> reader, SQLTransformer transformer, StatementPreparer preparer) {
-		List<I> ids = new ArrayList<I>();
+		List<I> ids = new ArrayList<>();
 		fetchIdCollection(ids, sql, reader, transformer, preparer);
 		return ids;
 	}

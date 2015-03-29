@@ -18,7 +18,7 @@ public class RemoteRepositoriesExporter {
 		super();
 		this.context = context;
 		this.registry = registry;
-		remoteRepositories = new ArrayList<RepositoryRemote>();
+		remoteRepositories = new ArrayList<>();
 	}
 
 	public int getPort() {
