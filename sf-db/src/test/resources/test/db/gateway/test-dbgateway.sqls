@@ -36,12 +36,6 @@
 			DROP TABLE TestBrisi
 		</sql>
 
-		<sql name="TestSleep">
-			BEGIN
-				DBMS_LOCK.SLEEP(:seconds);
-			END;
-		</sql>
-
 		<sql name="ArrayParameters">
 			SELECT X FROM DUAL
 			WHERE X = ?

@@ -45,23 +45,23 @@ public class DBGatewayTest {
 
 	// Basic test
 
-	@Test(groups = "DatabaseRequired")
+	@Test
 	public void executeQueryTest() {
 		db.executeQuery("SelectAll", rs -> assertEquals(getInt(rs, "X"), 1));
 	}
 
-	@Test(groups = "DatabaseRequired", expectedExceptions = DBException.class)
+	@Test(expectedExceptions = DBException.class)
 	public void wrongSyntaxTest() {
 		db.executeQuery("WrongSyntax", rs -> fail());
 	}
 
-	@Test(groups = "DatabaseRequired")
+	@Test
 	public void fetchScalarTest() {
 		long x = db.fetchScalar("SelectAll");
 		assertEquals(x, 1);
 	}
 
-	@Test(groups = "DatabaseRequired")
+	@Test
 	public void fetchOneTest() {
 		Dual dual = db.fetchOne("SelectWhere", DualReader,	(PreparedStatementHelper st) -> {
 			st.setMasked("x", true);
@@ -70,20 +70,20 @@ public class DBGatewayTest {
 		assertEquals(dual.x, 1);
 	}
 
-	@Test(groups = "DatabaseRequired")
+	@Test
 	public void fetchOneNotFound() {
 		Dual dual = db.fetchOne("SelectWhere", DualReader, (PreparedStatementHelper st) -> setInt(st, "x", 2));
 		assertNull(dual);
 	}
 
-	@Test(groups = "DatabaseRequired")
+	@Test
 	public void fetchListTest() {
 		List<Dual> duals = db.fetchList("SelectAll", DualReader);
 		assertEquals(duals.size(), 1);
 		assertEquals(duals.get(0).x, 1);
 	}
 
-	@Test(groups = "DatabaseRequired")
+	@Test
 	public void fetchListTest2() {
 		List<Dual> duals = db.fetchList("SelectWhere", DualReader, (PreparedStatementHelper st) -> setInt(st, "x", 2));
 		assertEquals(duals.size(), 0);
@@ -102,17 +102,17 @@ public class DBGatewayTest {
 		db.executeDDL("CreateTable");
 	}
 
-	@Test(groups = {"DatabaseRequired", "InsertTest"})
+	@Test(groups = "InsertTest")
 	public void insertTest() {
 		db.executeUpdate("InsertInto", (PreparedStatementHelper st) -> setString(st, "name", "Pera"));
 	}
 
-	@Test(groups = {"DatabaseRequired", "InsertTest"}, expectedExceptions = DBException.class)
+	@Test(groups = "InsertTest", expectedExceptions = DBException.class)
 	public void insertTest2() {
 		db.executeUpdate("InsertInto", (PreparedStatementHelper st) -> setString(st, "name", "Pera je veliki konj koji ne moze da stane u stalu!"));
 	}
 
-	@Test(groups = {"DatabaseRequired", "InsertTest"})
+	@Test(groups = "InsertTest")
 	public void insertWithAutoGenColumnsTest() {
 		db.executeUpdate("InsertInto", st -> setString(st, "name", "PeraAutoGen"),
 			new AutoGenColumnsReader() {
@@ -126,7 +126,7 @@ public class DBGatewayTest {
 		);
 	}
 
-	@Test(groups = {"DatabaseRequired", "InsertTest"}, dependsOnMethods = "insertWithAutoGenColumnsTest")
+	@Test(groups = "InsertTest", dependsOnMethods = "insertWithAutoGenColumnsTest")
 	public void updateWithAutoGenColumnsTest() {
 		db.executeUpdate("Update", st -> setString(st, "name", "PeraAutoGen"),
 			new AutoGenColumnsReader() {
@@ -140,7 +140,7 @@ public class DBGatewayTest {
 		);
 	}
 
-	@Test(groups = {"DatabaseRequired", "InsertTest"})
+	@Test(groups = "InsertTest")
 	public void batchedInsertTest() {
 		db.executeBatchUpdate("InsertInto",
 			new BatchStatementPreparer() {
@@ -155,7 +155,7 @@ public class DBGatewayTest {
 		);
 	}
 
-	@Test(groups = "DatabaseRequired")
+	@Test
 	public void arrayParametersTest() {
 		Dual dual = db.fetchOne("ArrayParameters", DualReader, ArrayParameters.params(1));
 		assertEquals(dual.x, 1);
@@ -164,7 +164,7 @@ public class DBGatewayTest {
 		assertTrue(duals.isEmpty());
 	}
 
-	@Test(groups = "DatabaseRequired")
+	@Test
 	public void namedParametersTest() {
 		Dual dual = db.fetchOne("NamedParameters", DualReader, params("x", 1));
 		assertEquals(dual.x, 1);
