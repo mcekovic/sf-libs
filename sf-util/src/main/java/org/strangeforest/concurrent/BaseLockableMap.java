@@ -93,12 +93,13 @@ public class BaseLockableMap<K, V> implements LockableMap<K, V> {
 	}
 
 	@Override public V lockedGet(K key, Function<K, V> function) {
-		lock(key);
+		EntryLock lock = getLock(key);
+		lock.lock();
 		try {
 			V value = get(key);
 			if (value == null && !containsKey(key)) {
 				value = function.apply(key);
-				doPut(key, value);
+				doPut(key, value, lock);
 			}
 			return value;
 		}
@@ -108,16 +109,18 @@ public class BaseLockableMap<K, V> implements LockableMap<K, V> {
 	}
 
 	@Override public V lockedPut(K key, V value) {
-		lock(key);
+		EntryLock lock = getLock(key);
+		lock.lock();
 		try {
-			return doPut(key, value);
+			return doPut(key, value, lock);
 		}
 		finally {
 			unlock(key);
 		}
 	}
 
-	private synchronized V doPut(K key, V value) {
+	private synchronized V doPut(K key, V value, EntryLock lock) {
+		lock.clearDirty();
 		return map.put(key, value);
 	}
 
@@ -146,11 +149,19 @@ public class BaseLockableMap<K, V> implements LockableMap<K, V> {
 			}
 		}
 		else {
+			boolean setDirty = false;
 			synchronized (this) {
-				lock.setDirty();
 				lock.decRefCount();
+				if (lock.isLocked()) {
+					lock.setDirty();
+					setDirty = true;
+					return null;
+				}
 			}
-			return null;
+			if (!setDirty)
+				return tryLockedRemove(key);
+			else
+				throw new IllegalStateException();
 		}
 	}
 
@@ -189,7 +200,8 @@ public class BaseLockableMap<K, V> implements LockableMap<K, V> {
 	}
 
 	@Override public synchronized V put(K key, V value) {
-		checkLocked(key);
+		EntryLock lock = checkLocked(key);
+		lock.clearDirty();
 		return map.put(key, value);
 	}
 
@@ -268,6 +280,10 @@ public class BaseLockableMap<K, V> implements LockableMap<K, V> {
 
 		public void setDirty() {
 			dirty = true;
+		}
+
+		public void clearDirty() {
+			dirty = false;
 		}
 	}
 
