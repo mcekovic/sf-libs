@@ -176,12 +176,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 	}
 
 	@Override public E find(I id) {
-		if (useCache) {
-			E entity = cache.lockedGet(id, this::fetch);
-			return entity != null ? entity.lazyDeepClone() : null;
-		}
-		else
-			return fetch(id);
+		return getCache().lockedGet(id, this::fetch);
 	}
 
 	@Override public E get(I id) {
@@ -209,8 +204,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 				E entity = fetch(query);
 				if (entity != null) {
 					entityRef.set(entity);
-					if (useCache)
-						cache.lockedPut(entity.getId(), entity);
+					getCache().tryLockedPut(entity);
 					List<I> ids = new ArrayList<>(1);
 					ids.add(entity.getId());
 					return ids;
@@ -220,7 +214,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 			});
 			E entity = entityRef.get();
 			if (entity != null)
-				return entity.lazyDeepClone();
+				return entity;
 			else
 				return !result.isEmpty() ? find(result.get(0)) : null;
 		}
@@ -250,10 +244,8 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 					List<I> ids = new ArrayList<>(entities.size());
 					for (E entity : entities) {
 						context.attach(entity);
-						I id = entity.getId();
-						if (useCache) //TODO Rethink to put only if absent
-							cache.lockedPut(id, entity);
-						ids.add(id);
+						ids.add(entity.getId());
+						getCache().tryLockedPut(entity);
 					}
 					return ids;
 				}))
@@ -274,18 +266,21 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 	}
 
 	@Override public <D> List<D> getDetails(String detailName, I id, FieldAccessor<E, List<D>> accessor) {
-		if (useCache && accessor != null) {
+		if (accessor != null) {
+			EntityCache<I, E> cache = getCache();
 			cache.lock(id);
 			try {
-				E cachedEntity = cache.get(id);
-				if (cachedEntity != null) {
-					List<D> details = accessor.get(cachedEntity);
-					if (details == null) {
-						details = fetchDetails(detailName, id);
-						accessor.set(cachedEntity, details);
-					}
-					return cloneList(details);
+				E entity = cache.get(id);
+				if (entity == null) {
+					entity = fetch(id);
+					cache.put(entity);
 				}
+				List<D> details = accessor.get(entity);
+				if (details == null) {
+					details = fetchDetails(detailName, id);
+					accessor.set(entity, details);
+				}
+				return cloneList(details);
 			}
 			finally {
 				cache.unlock(id);
@@ -314,10 +309,11 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 	// Transacting
 
 	@Override public void create(E entity) {
+		EntityCache<I, E> cache = getCache();
 		I id = entity.getId();
 		if (id == null) {
 			dao.create(entity);
-			addEntity(entity, false);
+			addEntity(cache, entity, false);
 		}
 		else {
 			cache.lock(id);
@@ -326,7 +322,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 				I newId = entity.getId();
 				if (!id.equals(newId))
 					throw new IllegalStateException("Trying to create already created entity."); 
-				addEntity(entity, true);
+				addEntity(cache, entity, true);
 			}
 			finally {
 				cache.unlock(id);
@@ -338,6 +334,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 	}
 
 	@Override public void create(Iterable<E> entities) {
+		EntityCache<I, E> cache = getCache();
 		List<I> lockedIds = new ArrayList<>();
 		try {
 			for (E entity : entities) {
@@ -349,7 +346,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 			}
 			dao.create(entities);
 			for (E entity : entities)
-				addEntity(entity, lockedIds.contains(entity.getId()));
+				addEntity(cache, entity, lockedIds.contains(entity.getId()));
 		}
 		finally {
 			for (I id : lockedIds)
@@ -367,7 +364,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 		I id = entity.getId();
 		if (id == null) {
 			dao.create(entity);
-			addEntity(entity, false);
+			addEntity(getCache(), entity, false);
 			evictFromQueries(entity);
 		}
 		else
@@ -375,13 +372,14 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 	}
 
 	private void lockedSave(E entity) {
+		EntityCache<I, E> cache = getCache();
 		boolean changed;
 		I id = entity.getId();
 		cache.lock(id);
 		try {
 			E oldEntity = find(id);
 			changed = dao.save(entity, oldEntity);
-			addEntity(entity, true);
+			addEntity(cache, entity, true);
 		}
 		finally {
 			cache.unlock(id);
@@ -391,11 +389,12 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 	}
 
 	@Override public void save(E entity, E optLockedEntity) throws OptimisticLockingException {
+		EntityCache<I, E> cache = getCache();
 		boolean changed = false;
 		I id = entity.getId();
 		if (id == null || !context.isAttached(entity)) {
 			dao.create(entity);
-			addEntity(entity, false);
+			addEntity(cache, entity, false);
 			changed = true;
 		}
 		else {
@@ -409,7 +408,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 				}
 				if (!hasBeenChanged) {
 					changed = dao.save(entity, oldEntity);
-					addEntity(entity, true);
+					addEntity(cache, entity, true);
 				}
 				else if (!entity.equalsByValue(oldEntity))
 					throw new OptimisticLockingException(entityClass, id);
@@ -436,6 +435,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 			for (E oldEntity : oldEntities)
 				forDelete.add(oldEntity.getId());
 		}
+		EntityCache<I, E> cache = getCache();
 		List<I> lockedIds = new ArrayList<>();
 		try {
 			for (E entity : entities) {
@@ -466,11 +466,11 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 			if (!forDelete.isEmpty())
 				dao.delete(forDelete);
 			for (E entity : forCreate)
-				addEntity(entity, false);
+				addEntity(cache, entity, false);
 			for (E entity : forSave)
-				addEntity(entity, true);
+				addEntity(cache, entity, true);
 			for (I id : forDelete)
-				cache.remove(id);
+				cache.deleted(id);
 		}
 		finally {
 			for (I id : lockedIds)
@@ -497,14 +497,12 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 		return null;
 	}
 
-	private void addEntity(E entity, boolean alreadyLocked) {
+	private void addEntity(EntityCache<I, E> cache, E entity, boolean alreadyLocked) {
 		context.attach(entity);
-		if (useCache) {
-			if (alreadyLocked)
-				cache.put(entity.getId(), entity.deepClone());
-			else
-				cache.lockedPut(entity.getId(), entity.deepClone());
-		}
+		if (alreadyLocked)
+			cache.changed(entity);
+		else
+			cache.lockedChanged(entity);
 	}
 
 	private void addQuery(Query query, Iterable<E> entities) {
@@ -586,8 +584,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 	// Evicting
 
 	@Override public void evict(I id) {
-		if (useCache)
-			cache.lockedRemove(id);
+		getCache().evict(id);
 	}
 
 	@Override public void evict(Query query) {
@@ -597,8 +594,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 	}
 
 	@Override public void evictEntities() {
-		if (useCache)
-			cache.tryClear();
+		getCache().clear();
 	}
 
 	@Override public void evictQueries() {
@@ -611,6 +607,10 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 	@Override public void evictAll() {
 		evictEntities();
 		evictQueries();
+	}
+
+	private EntityCache<I, E> getCache() {
+		return Session.getSession().getCache(entityClass, cache, useCache);
 	}
 
 	private void evictFromQueries(final I id) {
