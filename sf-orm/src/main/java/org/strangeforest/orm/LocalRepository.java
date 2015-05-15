@@ -177,11 +177,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 
 	@Override public E find(I id) {
 		if (useCache) {
-			E entity = cache.lockedGet(id, new Function<I, E>() {
-				@Override public E apply(I id) {
-					return fetch(id);
-				}
-			});
+			E entity = cache.lockedGet(id, this::fetch);
 			return entity != null ? entity.lazyDeepClone() : null;
 		}
 		else
