@@ -58,8 +58,8 @@ public class ORMTest {
 		}
 
 		LocalDomainContext context = new LocalDomainContext();
-		aggregateManager = new LocalRepository<>(context, new TestAggregateDAO(dataSource));
-		entityManager = new LocalRepository<>(context, new TestEntityDAO(dataSource));
+		aggregateManager = new TransactionalRepository<>(context, new TestAggregateDAO(dataSource));
+		entityManager = new TransactionalRepository<>(context, new TestEntityDAO(dataSource));
 		entityManager.setUsePredicatedQueryCache(true);
 		simpleEntityManager = new LocalRepository<>(context, new SimpleTestEntityDAO(dataSource));
 		aggregateManager.init();
