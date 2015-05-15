@@ -4,6 +4,7 @@ import org.strangeforest.db.*;
 import org.strangeforest.db.gateway.*;
 import org.strangeforest.db.logging.*;
 import org.strangeforest.orm.*;
+import org.strangeforest.transaction.*;
 import org.testng.annotations.*;
 
 import test.orm.db.*;
@@ -189,6 +190,22 @@ public class ORMTest {
 		SimpleTestEntity entity = simpleEntityManager.get(simpleEntityId);
 		entity.setName("Entity2");
 		simpleEntityManager.save(entity);
-		assertThat(entity.getId()).isEqualTo(simpleEntityId);
+		assertThat(simpleEntityManager.get(simpleEntityId).getName()).isEqualTo("Entity2");
+		simpleEntityManager.evict(simpleEntityId);
+		assertThat(simpleEntityManager.get(simpleEntityId).getName()).isEqualTo("Entity2");
+	}
+
+	@Test(dependsOnMethods = "updateSimpleEntity")
+	public void transactionRollbackDoesNotPolluteTheCache() {
+		TransactionManager.execute(tran -> {
+			SimpleTestEntity entity = simpleEntityManager.get(simpleEntityId);
+			entity.setName("Entity3");
+			simpleEntityManager.save(entity);
+			tran.setRollbackOnly();
+			return null;
+		});
+		assertThat(simpleEntityManager.get(simpleEntityId).getName()).isEqualTo("Entity2");
+		simpleEntityManager.evict(simpleEntityId);
+		assertThat(simpleEntityManager.get(simpleEntityId).getName()).isEqualTo("Entity2");
 	}
 }

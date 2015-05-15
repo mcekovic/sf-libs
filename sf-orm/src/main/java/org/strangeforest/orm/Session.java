@@ -45,14 +45,14 @@ final class Session {
 		this.inTx = inTx;
 	}
 
-	public <I, E extends DomainEntity<I, E>> EntityCache<I, E> getCache(Class<E> entityClass, LockableCache<I, E> l2, boolean useCache) {
+	public <I, E extends DomainEntity<I, E>> EntityCache<I, E> getCache(Class<E> entityClass, LockableCache<I, E> cache, boolean useCache) {
 		String name = entityClass.getName();
-		EntityCache<I, E> cache = (EntityCache<I, E>)caches.get(name);
-		if (cache == null) {
-			cache = new EntityCache<>(l2, useCache, inTx);
-			caches.put(name, cache);
+		EntityCache<I, E> entityCache = (EntityCache<I, E>)caches.get(name);
+		if (entityCache == null) {
+			entityCache = new EntityCache<>(cache, useCache, inTx);
+			caches.put(name, entityCache);
 		}
-		return cache;
+		return entityCache;
 	}
 
 	private void flush() {

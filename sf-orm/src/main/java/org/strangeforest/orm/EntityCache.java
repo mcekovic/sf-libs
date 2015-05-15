@@ -9,22 +9,22 @@ final class EntityCache<I, E extends DomainEntity<I, E>> {
 
 	private final Map<I, E> l1;
 	private final LockableCache<I, E> l2;
-	private final boolean useCache;
+	private final boolean useL2;
 	private final boolean inTx;
 	private Map<I, E> changed;
 	private Set<I> deleted;
 	private Set<I> locked;
 
-	public EntityCache(LockableCache<I, E> l2, boolean useCache, boolean inTx) {
+	public EntityCache(LockableCache<I, E> l2, boolean useL2, boolean inTx) {
 		l1 = new HashMap<>();
 		this.l2 = l2;
-		this.useCache = useCache;
+		this.useL2 = useL2;
 		this.inTx = inTx;
 	}
 
 	public E get(I id) {
 		E entity = l1.get(id);
-		if (useCache && entity == null) {
+		if (useL2 && entity == null) {
 			entity = l2.get(id);
 			if (entity != null) {
 				entity = entity.lazyDeepClone();
@@ -36,7 +36,7 @@ final class EntityCache<I, E extends DomainEntity<I, E>> {
 
 	public E lockedGet(I id, Function<I, E> function) {
 		E entity = l1.get(id);
-		if (useCache && entity == null) {
+		if (useL2 && entity == null) {
 			entity = l2.lockedGet(id, function);
 			if (entity != null) {
 				entity = entity.lazyDeepClone();
@@ -49,21 +49,21 @@ final class EntityCache<I, E extends DomainEntity<I, E>> {
 	public void put(E entity) {
 		I id = entity.getId();
 		l1.put(id, entity);
-		if (useCache)
+		if (useL2)
 			l2.put(id, entity.lazyDeepClone());
 	}
 
 	public void tryLockedPut(E entity) {
 		I id = entity.getId();
 		l1.put(id, entity);
-		if (useCache)
+		if (useL2)
 			l2.tryLockedPut(id, entity.lazyDeepClone());
 	}
 
 	public void changed(E entity) {
 		I id = entity.getId();
 		l1.put(id, entity);
-		if (useCache) {
+		if (useL2) {
 			if (inTx)
 				changed().put(id, entity);
 			else
@@ -74,7 +74,7 @@ final class EntityCache<I, E extends DomainEntity<I, E>> {
 	public void lockedChanged(E entity) {
 		I id = entity.getId();
 		l1.put(id, entity);
-		if (useCache) {
+		if (useL2) {
 			if (inTx) {
 				changed().put(id, entity);
 				l2.lock(id);
@@ -87,7 +87,7 @@ final class EntityCache<I, E extends DomainEntity<I, E>> {
 
 	public void deleted(I id) {
 		l1.remove(id);
-		if (useCache) {
+		if (useL2) {
 			if (inTx)
 				deleted().add(id);
 			else
@@ -97,17 +97,17 @@ final class EntityCache<I, E extends DomainEntity<I, E>> {
 
 	public void evict(I id) {
 		l1.remove(id);
-		if (useCache)
+		if (useL2)
 			l2.lockedRemove(id);
 	}
 
 	public void lock(I id) {
-		if (useCache)
+		if (useL2)
 			l2.lock(id);
 	}
 
 	public void unlock(I id) {
-		if (useCache) {
+		if (useL2) {
 			if (inTx)
 				locked().add(id);
 			else
@@ -117,12 +117,12 @@ final class EntityCache<I, E extends DomainEntity<I, E>> {
 
 	public void clear() {
 		l1.clear();
-		if (useCache)
+		if (useL2)
 			l2.tryClear();
 	}
 
 	public void flush() {
-		if (!useCache)
+		if (!useL2)
 			return;
 		try {
 			if (changed != null) {
@@ -150,7 +150,7 @@ final class EntityCache<I, E extends DomainEntity<I, E>> {
 	}
 
 	public void clean() {
-		if (!useCache)
+		if (!useL2)
 			return;
 		unlock();
 	}
