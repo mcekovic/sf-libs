@@ -140,4 +140,29 @@ public class LockableMapTest {
 		cleared.acquire();
 		assertEquals(map.size(), 0);
 	}
+
+	@Test
+	public void testTryLockedPut() throws Exception {
+		final Semaphore put = new Semaphore(0);
+		final LockableMap<String, Long> map = new LockableHashMap<>();
+		map.tryLockedPut("1", 1L);
+		Assert.assertEquals(map.get("1").longValue(), 1L);
+		map.lock("1");
+		try {
+			ThreadUtil.runInThread(() -> {
+				try {
+					map.tryLockedPut("1", 2L);
+					put.release();
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			});
+			put.acquire();
+		}
+		finally {
+			map.unlock("1");
+		}
+		assertEquals(map.get("1").longValue(), 1L);
+	}
 }

@@ -119,6 +119,38 @@ public class BaseLockableMap<K, V> implements LockableMap<K, V> {
 		}
 	}
 
+	@Override public boolean tryLockedPut(K key, V value) {
+		EntryLock lock = getLock(key);
+		boolean isLocked = lock.tryLock();
+		if (isLocked) {
+			try {
+				doPut(key, value, lock);
+			}
+			finally {
+				unlock(key);
+			}
+		}
+		else
+			returnLock(lock);
+		return isLocked;
+	}
+
+	@Override public boolean tryLockedPut(K key, V value, long timeout, TimeUnit unit) throws InterruptedException {
+		EntryLock lock = getLock(key);
+		boolean isLocked = lock.tryLock(timeout, unit);
+		if (isLocked) {
+			try {
+				doPut(key, value, lock);
+			}
+			finally {
+				unlock(key);
+			}
+		}
+		else
+			returnLock(lock);
+		return isLocked;
+	}
+
 	private synchronized V doPut(K key, V value, EntryLock lock) {
 		lock.clearDirty();
 		return map.put(key, value);

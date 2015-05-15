@@ -1,6 +1,7 @@
 package org.strangeforest.concurrent;
 
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.*;
 
 /**
@@ -27,6 +28,25 @@ public interface LockableMap<K, V> extends Map<K, V>, LockManager<K> {
 	 * @return old value
 	 */
 	V lockedPut(K key, V value);
+
+	/**
+	 * Tries locking the key, puts mapping and finally unlocks the key.
+	 * @param key key
+	 * @param value value
+	 * @return <tt>true</tt> if key is successfully locked and value is put, otherwise if key is already locked <tt>false</tt> is returned.
+	 */
+	boolean tryLockedPut(K key, V value);
+
+	/**
+	 * Tries locking the key, puts mapping and finally unlocks the key.
+	 * @param key key
+	 * @param value value
+	 * @param timeout number of milliseconds to wait if object is already locked.
+	 * @param unit time unit.
+	 * @return <tt>true</tt> if key is successfully locked and value is put, otherwise if key is already locked <tt>false</tt> is returned.
+	 * @throws InterruptedException if current thread is interrupted.
+	 */
+	boolean tryLockedPut(K key, V value, long timeout, TimeUnit unit) throws InterruptedException;
 
 	/**
 	 * Locks the key, removes mapping for the key and finally unlocks the key.
