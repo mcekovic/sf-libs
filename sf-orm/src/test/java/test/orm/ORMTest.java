@@ -8,7 +8,7 @@ import org.testng.annotations.*;
 
 import test.orm.db.*;
 
-import static org.testng.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 @Test
 public class ORMTest {
@@ -88,7 +88,7 @@ public class ORMTest {
 		aggregate1.setName("Aggregate1");
 		aggregateManager.create(aggregate1);
 		aggregate1Id = aggregate1.getId();
-		assertNotNull(aggregate1Id);
+		assertThat(aggregate1Id).isNotNull();
 	}
 
 	@Test(dependsOnMethods = "testCreateAggregate1")
@@ -98,7 +98,7 @@ public class ORMTest {
 		aggregate2.setAggregateId(aggregate1Id);
 		aggregateManager.create(aggregate2);
 		aggregate2Id = aggregate2.getId();
-		assertNotNull(aggregate2Id);
+		assertThat(aggregate2Id).isNotNull();
 	}
 
 	@Test(dependsOnMethods = "testCreateAggregate2")
@@ -109,7 +109,7 @@ public class ORMTest {
 		aggregate1.addEntity(entity1);
 		aggregateManager.save(aggregate1);
 		entityId = entity1.getId();
-		assertNotNull(entityId);
+		assertThat(entityId).isNotNull();
 	}
 
 	@Test(dependsOnMethods = "testAddEntity1")
@@ -123,7 +123,7 @@ public class ORMTest {
 	@Test(dependsOnMethods = "updateEntity1")
 	public void lockedUpdateEntity1() {
 		entityManager.lockedUpdate(entityId, entity -> entity.setName("Entity1b"));
-		assertEquals(entityManager.get(entityId).getName(), "Entity1b");
+		assertThat(entityManager.get(entityId).getName()).isEqualTo("Entity1b");
 	}
 
 	@Test(dependsOnMethods = "lockedUpdateEntity1")
@@ -133,8 +133,8 @@ public class ORMTest {
 		entity2.setName("Entity2");
 		entityManager.save(entity2);
 		entity2Id = entity2.getId();
-		assertNotNull(entity2Id);
-		assertEquals(aggregateManager.get(aggregate1Id).getEntities().size(), 2);
+		assertThat(entity2Id).isNotNull();
+		assertThat(aggregateManager.get(aggregate1Id).getEntities()).hasSize(2);
 	}
 
 	@Test(dependsOnMethods = "testAddEntity2")
@@ -148,31 +148,31 @@ public class ORMTest {
 		detail2.setName("Detail2");
 		entity2.addDetail(detail2);
 		entityManager.save(entity2);
-		assertEquals(entity2.getDetails().size(), 2);
+		assertThat(entity2.getDetails()).hasSize(2);
 	}
 
 	@Test(dependsOnMethods = "updateEntity2")
 	public void queryAggregateByName() {
 		TestAggregate aggregate = aggregateManager.get(TestAggregate.QUERY_BY_NAME("Aggregate1"));
-		assertEquals(aggregate.getName(), "Aggregate1");
+		assertThat(aggregate.getName()).isEqualTo("Aggregate1");
 	}
 
 	@Test(dependsOnMethods = "updateEntity2")
 	public void queryEntityByName() {
-		assertEquals(entityManager.getList(TestEntity.QUERY_FOR_NAME("Entity1b")).size(), 1);
-		assertEquals(entityManager.getList(TestEntity.QUERY_FOR_NAME("Pera")).size(), 0);
+		assertThat(entityManager.getList(TestEntity.QUERY_FOR_NAME("Entity1b"))).hasSize(1);
+		assertThat(entityManager.getList(TestEntity.QUERY_FOR_NAME("Pera"))).hasSize(0);
 	}
 
 	@Test(dependsOnMethods = "updateEntity2")
 	public void queryEntityByNameGetDetails() {
 		TestEntity entity = entityManager.get(TestEntity.QUERY_FOR_NAME("Entity2a"));
-		assertEquals(entity.getDetails().size(), 2);
-		assertEquals(entityManager.get(entity.getId()).getDetails().size(), 2);
+		assertThat(entity.getDetails()).hasSize(2);
+		assertThat(entityManager.get(entity.getId()).getDetails()).hasSize(2);
 	}
 
 	@Test(dependsOnMethods = "updateEntity2")
 	public void queryEntityByAggregate() {
-		assertEquals(entityManager.getList(TestEntity.QUERY_FOR_AGGREGATE(aggregate1Id)).size(), 2);
+		assertThat(entityManager.getList(TestEntity.QUERY_FOR_AGGREGATE(aggregate1Id))).hasSize(2);
 	}
 
 	@Test
@@ -181,7 +181,7 @@ public class ORMTest {
 		entity.setName("Entity");
 		simpleEntityManager.save(entity);
 		simpleEntityId = entity.getId();
-		assertNotNull(simpleEntityId);
+		assertThat(simpleEntityId).isNotNull();
 	}
 
 	@Test(dependsOnMethods = "testCreateSimpleEntity")
@@ -189,6 +189,6 @@ public class ORMTest {
 		SimpleTestEntity entity = simpleEntityManager.get(simpleEntityId);
 		entity.setName("Entity2");
 		simpleEntityManager.save(entity);
-		assertEquals(entity.getId(), simpleEntityId);
+		assertThat(entity.getId()).isEqualTo(simpleEntityId);
 	}
 }

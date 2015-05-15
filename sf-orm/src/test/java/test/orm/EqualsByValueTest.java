@@ -1,10 +1,10 @@
 package test.orm;
 
+import org.strangeforest.orm.*;
 import org.testng.annotations.*;
 
-import org.strangeforest.orm.*;
-
-import static org.testng.Assert.*;
+import static org.assertj.core.api.Assertions.*;
+import static org.strangeforest.orm.EqualsByValueUtil.*;
 import static test.orm.TestMakers.*;
 
 @Test
@@ -13,26 +13,26 @@ public class EqualsByValueTest {
 	@Test
 	public void sameInstancesAreEqualByValue() {
 		TestEntity e1 = makeEntity();
-		assertTrue(EqualsByValueUtil.equalByValue(e1, e1));
+		assertThat(equalByValue(e1, e1)).isTrue();
 	}
 
 	@Test
 	public void nullsAreEqualByValue() {
-		assertTrue(EqualsByValueUtil.equalByValue((EquatableByValue)null, null));
+		assertThat(equalByValue((EquatableByValue)null, null)).isTrue();
 	}
 
 	@Test
 	public void nullIsNotEqualByValueWithAnInstance() {
 		TestEntity e1 = makeEntity();
-		assertFalse(EqualsByValueUtil.equalByValue(e1, null));
-		assertFalse(EqualsByValueUtil.equalByValue(null, e1));
+		assertThat(equalByValue(e1, null)).isFalse();
+		assertThat(equalByValue(null, e1)).isFalse();
 	}
 
 	@Test
 	public void sameEntityValuesAreEqualByValue() {
 		TestEntity e1 = makeEntity();
 		TestEntity e2 = makeEntity();
-		assertTrue(EqualsByValueUtil.equalByValue(e1, e2));
+		assertThat(equalByValue(e1, e2)).isTrue();
 	}
 
 	@Test
@@ -42,15 +42,15 @@ public class EqualsByValueTest {
 		TestEntity e3 = makeEntity();
 		e2.setDescription("Different");
 		e3.getDetails().get(0).setName("Different");
-		assertFalse(EqualsByValueUtil.equalByValue(e1, e2));
-		assertFalse(EqualsByValueUtil.equalByValue(e1, e3));
+		assertThat(equalByValue(e1, e2)).isFalse();
+		assertThat(equalByValue(e1, e3)).isFalse();
 	}
 
 	@Test
 	public void sameAggregateValuesAreEqualByValue() {
 		TestAggregate a1 = makeAggregate();
 		TestAggregate a2 = makeAggregate();
-		assertTrue(EqualsByValueUtil.equalByValue(a1, a2));
+		assertThat(equalByValue(a1, a2)).isTrue();
 	}
 
 	@Test
@@ -64,8 +64,8 @@ public class EqualsByValueTest {
 		de.setId(de.getId() + 1L);
 		a3.setEntity(de);
 		a4.getEntities().clear();
-		assertFalse(EqualsByValueUtil.equalByValue(a1, a2));
-		assertFalse(EqualsByValueUtil.equalByValue(a1, a3));
-		assertFalse(EqualsByValueUtil.equalByValue(a1, a4));
+		assertThat(equalByValue(a1, a2)).isFalse();
+		assertThat(equalByValue(a1, a3)).isFalse();
+		assertThat(equalByValue(a1, a4)).isFalse();
 	}
 }

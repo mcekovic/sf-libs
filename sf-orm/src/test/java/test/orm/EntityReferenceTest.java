@@ -1,9 +1,9 @@
 package test.orm;
 
-import org.testng.*;
+import org.strangeforest.orm.*;
 import org.testng.annotations.*;
 
-import org.strangeforest.orm.*;
+import static org.assertj.core.api.Assertions.*;
 
 @Test
 public class EntityReferenceTest {
@@ -14,17 +14,17 @@ public class EntityReferenceTest {
 		ref1.setId(5L);
 		EntityReference<Long, TestEntity> ref2 = new EntityReference<>(TestEntity.class);
 		ref2.setId(5L);
-		Assert.assertEquals(ref1, ref2);
-		Assert.assertEquals(ref1.hashCode(), ref2.hashCode());
-		Assert.assertTrue(ref1.isSame(ref2));
+		assertThat(ref1).isEqualTo(ref2);
+		assertThat(ref1.hashCode()).isEqualTo(ref2.hashCode());
+		assertThat(ref1.isSame(ref2)).isTrue();
 
 		EntityReference<Long, TestEntity> ref3 = new EntityReference<>(TestEntity.class);
 		ref3.set(new TestEntity(5L));
 		EntityReference<Long, TestEntity> ref4 = new EntityReference<>(TestEntity.class);
 		ref4.set(new TestEntity(5L));
-		Assert.assertEquals(ref3, ref4);
-		Assert.assertEquals(ref3.hashCode(), ref4.hashCode());
-		Assert.assertTrue(ref3.isSame(ref4));
+		assertThat(ref3).isEqualTo(ref4);
+		assertThat(ref3.hashCode()).isEqualTo(ref4.hashCode());
+		assertThat(ref3.isSame(ref4)).isTrue();
 	}
 
 	@Test
@@ -33,24 +33,24 @@ public class EntityReferenceTest {
 		ref1.setId(5L);
 		EntityReference<Long, TestEntity> ref2 = new EntityReference<>(TestEntity.class);
 		ref2.setId(6L);
-		Assert.assertFalse(ref1.equals(ref2));
-		Assert.assertFalse(ref1.isSame(ref2));
-		
+		assertThat(ref1).isNotEqualTo(ref2);
+		assertThat(ref1.isSame(ref2)).isFalse();
+
 		EntityReference<Long, TestEntity> ref3 = new EntityReference<>(TestEntity.class);
 		ref3.set(new TestEntity(5L));
 		EntityReference<Long, TestEntity> ref4 = new EntityReference<>(TestEntity.class);
 		ref4.set(new TestEntity(6L));
-		Assert.assertFalse(ref3.equals(ref4));
-		Assert.assertFalse(ref3.isSame(ref4));
+		assertThat(ref3).isNotEqualTo(ref4);
+		assertThat(ref3.isSame(ref4)).isFalse();
 	}
 
 	@Test
 	public void testNullsEqual() throws Exception {
 		EntityReference<Long, TestEntity> ref1 = new EntityReference<>(TestEntity.class);
 		EntityReference<Long, TestEntity> ref2 = new EntityReference<>(TestEntity.class);
-		Assert.assertEquals(ref1, ref2);
-		Assert.assertEquals(ref1.hashCode(), ref2.hashCode());
-		Assert.assertFalse(ref1.isSame(ref2));
+		assertThat(ref1).isEqualTo(ref2);
+		assertThat(ref1.hashCode()).isEqualTo(ref2.hashCode());
+		assertThat(ref1.isSame(ref2)).isFalse();
 	}
 
 	@Test
@@ -58,8 +58,8 @@ public class EntityReferenceTest {
 		EntityReference<Long, TestEntity> ref1 = new EntityReference<>(TestEntity.class);
 		ref1.setId(5L);
 		EntityReference<Long, TestEntity> ref2 = new EntityReference<>(TestEntity.class);
-		Assert.assertFalse(ref1.equals(ref2));
-		Assert.assertFalse(ref1.isSame(ref2));
+		assertThat(ref1).isNotEqualTo(ref2);
+		assertThat(ref1.isSame(ref2)).isFalse();
 	}
 
 
@@ -69,7 +69,7 @@ public class EntityReferenceTest {
 		ref1.set(new TestEntity());
 		EntityReference<Long, TestEntity> ref2 = new EntityReference<>(TestEntity.class);
 		ref2.set(new TestEntity());
-		Assert.assertFalse(ref1.equals(ref2));
-		Assert.assertFalse(ref1.isSame(ref2));
+		assertThat(ref1).isNotEqualTo(ref2);
+		assertThat(ref1.isSame(ref2)).isFalse();
 	}
 }
