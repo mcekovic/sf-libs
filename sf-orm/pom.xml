@@ -9,7 +9,6 @@
 
 	<artifactId>sf-orm</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.4-SNAPSHOT</version>
 	<name>Strange Forest ORM Library</name>
 
 	<scm>

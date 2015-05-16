@@ -9,7 +9,6 @@
 
 	<artifactId>sf-util</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.4-SNAPSHOT</version>
 	<name>Strange Forest Util Library</name>
 
 	<scm>

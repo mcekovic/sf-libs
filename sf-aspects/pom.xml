@@ -9,7 +9,6 @@
 
 	<artifactId>sf-aspects</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.4-SNAPSHOT</version>
 	<name>Strange Forest Aspects Library</name>
 
 	<scm>
