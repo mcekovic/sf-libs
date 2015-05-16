@@ -1,11 +1,10 @@
 package test.orm;
 
+import org.junit.*;
 import org.strangeforest.orm.*;
-import org.testng.annotations.*;
 
 import static org.assertj.core.api.Assertions.*;
 
-@Test
 public class EntityReferenceTest {
 
 	@Test
@@ -61,7 +60,6 @@ public class EntityReferenceTest {
 		assertThat(ref1).isNotEqualTo(ref2);
 		assertThat(ref1.isSame(ref2)).isFalse();
 	}
-
 
 	@Test
 	public void testEntitiesWOIdsNotEqual() throws Exception {

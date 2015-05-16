@@ -24,25 +24,33 @@ final class EntityCache<I, E extends DomainEntity<I, E>> {
 
 	public E get(I id) {
 		E entity = l1.get(id);
-		if (useL2 && entity == null) {
-			entity = l2.get(id);
-			if (entity != null) {
-				entity = entity.lazyDeepClone();
-				l1.put(id, entity);
-			}
+		if (entity == null && useL2)
+			entity = l2ToL1(id, l2.get(id));
+		return entity;
+	}
+
+	public E lockedGet(I id, Function<I, E> fetcher) {
+		E entity = l1.get(id);
+		if (entity == null) {
+			if (useL2)
+				entity = l2ToL1(id, l2.lockedGet(id, fetcher));
+			else
+				entity = daoToL1(id, fetcher.apply(id));
 		}
 		return entity;
 	}
 
-	public E lockedGet(I id, Function<I, E> function) {
-		E entity = l1.get(id);
-		if (useL2 && entity == null) {
-			entity = l2.lockedGet(id, function);
-			if (entity != null) {
-				entity = entity.lazyDeepClone();
-				l1.put(id, entity);
-			}
+	private E l2ToL1(I id, E entity) {
+		if (entity != null) {
+			entity = entity.lazyDeepClone();
+			l1.put(id, entity);
 		}
+		return entity;
+	}
+
+	private E daoToL1(I id, E entity) {
+		if (entity != null)
+			l1.put(id, entity);
 		return entity;
 	}
 

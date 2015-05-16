@@ -16,9 +16,9 @@ public class ORMTest {
 
 	private ConnectionPoolDataSource dataSource;
 	private DBGateway db;
-	private LocalRepository<Long, TestAggregate> aggregateManager;
-	private LocalRepository<Long, TestEntity> entityManager;
-	private LocalRepository<Long, SimpleTestEntity> simpleEntityManager;
+	private LocalRepository<Long, TestAggregate> aggregateRepository;
+	private LocalRepository<Long, TestEntity> entityRepository;
+	private LocalRepository<Long, SimpleTestEntity> simpleEntityRepository;
 
 	private Long aggregate1Id;
 	private Long aggregate2Id;
@@ -59,13 +59,13 @@ public class ORMTest {
 		}
 
 		LocalDomainContext context = new LocalDomainContext();
-		aggregateManager = new TransactionalRepository<>(context, new TestAggregateDAO(dataSource));
-		entityManager = new TransactionalRepository<>(context, new TestEntityDAO(dataSource));
-		entityManager.setUsePredicatedQueryCache(true);
-		simpleEntityManager = new LocalRepository<>(context, new SimpleTestEntityDAO(dataSource));
-		aggregateManager.init();
-		entityManager.init();
-		simpleEntityManager.init();
+		aggregateRepository = new TransactionalRepository<>(context, new TestAggregateDAO(dataSource));
+		entityRepository = new TransactionalRepository<>(context, new TestEntityDAO(dataSource));
+		entityRepository.setUsePredicatedQueryCache(true);
+		simpleEntityRepository = new LocalRepository<>(context, new SimpleTestEntityDAO(dataSource));
+		aggregateRepository.init();
+		entityRepository.init();
+		simpleEntityRepository.init();
 	}
 
 	@AfterSuite
@@ -87,7 +87,7 @@ public class ORMTest {
 	public void testCreateAggregate1() {
 		TestAggregate aggregate1 = new TestAggregate();
 		aggregate1.setName("Aggregate1");
-		aggregateManager.create(aggregate1);
+		aggregateRepository.create(aggregate1);
 		aggregate1Id = aggregate1.getId();
 		assertThat(aggregate1Id).isNotNull();
 	}
@@ -97,34 +97,34 @@ public class ORMTest {
 		TestAggregate aggregate2 = new TestAggregate();
 		aggregate2.setName("Aggregate2");
 		aggregate2.setAggregateId(aggregate1Id);
-		aggregateManager.create(aggregate2);
+		aggregateRepository.create(aggregate2);
 		aggregate2Id = aggregate2.getId();
 		assertThat(aggregate2Id).isNotNull();
 	}
 
 	@Test(dependsOnMethods = "testCreateAggregate2")
 	public void testAddEntity1() {
-		TestAggregate aggregate1 = aggregateManager.get(aggregate1Id);
+		TestAggregate aggregate1 = aggregateRepository.get(aggregate1Id);
 		TestEntity entity1 = new TestEntity();
 		entity1.setName("Entity1");
 		aggregate1.addEntity(entity1);
-		aggregateManager.save(aggregate1);
+		aggregateRepository.save(aggregate1);
 		entityId = entity1.getId();
 		assertThat(entityId).isNotNull();
 	}
 
 	@Test(dependsOnMethods = "testAddEntity1")
 	public void updateEntity1() {
-		TestEntity entity1 = entityManager.get(entityId);
+		TestEntity entity1 = entityRepository.get(entityId);
 		entity1.setName("Entity1a");
 		entity1.setDescription("Trla baba lan da joj prodje dan...");
-		entityManager.save(entity1);
+		entityRepository.save(entity1);
 	}
 
 	@Test(dependsOnMethods = "updateEntity1")
 	public void lockedUpdateEntity1() {
-		entityManager.lockedUpdate(entityId, entity -> entity.setName("Entity1b"));
-		assertThat(entityManager.get(entityId).getName()).isEqualTo("Entity1b");
+		entityRepository.lockedUpdate(entityId, entity -> entity.setName("Entity1b"));
+		assertThat(entityRepository.get(entityId).getName()).isEqualTo("Entity1b");
 	}
 
 	@Test(dependsOnMethods = "lockedUpdateEntity1")
@@ -132,15 +132,15 @@ public class ORMTest {
 		TestEntity entity2 = new TestEntity();
 		entity2.setAggregateId(aggregate1Id);
 		entity2.setName("Entity2");
-		entityManager.save(entity2);
+		entityRepository.save(entity2);
 		entity2Id = entity2.getId();
 		assertThat(entity2Id).isNotNull();
-		assertThat(aggregateManager.get(aggregate1Id).getEntities()).hasSize(2);
+		assertThat(aggregateRepository.get(aggregate1Id).getEntities()).hasSize(2);
 	}
 
 	@Test(dependsOnMethods = "testAddEntity2")
 	public void updateEntity2() {
-		TestEntity entity2 = entityManager.get(entity2Id);
+		TestEntity entity2 = entityRepository.get(entity2Id);
 		entity2.setName("Entity2a");
 		TestDetail detail1 = new TestDetail(1);
 		detail1.setName("Detail1");
@@ -148,64 +148,64 @@ public class ORMTest {
 		TestDetail detail2 = new TestDetail(2);
 		detail2.setName("Detail2");
 		entity2.addDetail(detail2);
-		entityManager.save(entity2);
+		entityRepository.save(entity2);
 		assertThat(entity2.getDetails()).hasSize(2);
 	}
 
 	@Test(dependsOnMethods = "updateEntity2")
 	public void queryAggregateByName() {
-		TestAggregate aggregate = aggregateManager.get(TestAggregate.QUERY_BY_NAME("Aggregate1"));
+		TestAggregate aggregate = aggregateRepository.get(TestAggregate.QUERY_BY_NAME("Aggregate1"));
 		assertThat(aggregate.getName()).isEqualTo("Aggregate1");
 	}
 
 	@Test(dependsOnMethods = "updateEntity2")
 	public void queryEntityByName() {
-		assertThat(entityManager.getList(TestEntity.QUERY_FOR_NAME("Entity1b"))).hasSize(1);
-		assertThat(entityManager.getList(TestEntity.QUERY_FOR_NAME("Pera"))).hasSize(0);
+		assertThat(entityRepository.getList(TestEntity.QUERY_FOR_NAME("Entity1b"))).hasSize(1);
+		assertThat(entityRepository.getList(TestEntity.QUERY_FOR_NAME("Pera"))).hasSize(0);
 	}
 
 	@Test(dependsOnMethods = "updateEntity2")
 	public void queryEntityByNameGetDetails() {
-		TestEntity entity = entityManager.get(TestEntity.QUERY_FOR_NAME("Entity2a"));
+		TestEntity entity = entityRepository.get(TestEntity.QUERY_FOR_NAME("Entity2a"));
 		assertThat(entity.getDetails()).hasSize(2);
-		assertThat(entityManager.get(entity.getId()).getDetails()).hasSize(2);
+		assertThat(entityRepository.get(entity.getId()).getDetails()).hasSize(2);
 	}
 
 	@Test(dependsOnMethods = "updateEntity2")
 	public void queryEntityByAggregate() {
-		assertThat(entityManager.getList(TestEntity.QUERY_FOR_AGGREGATE(aggregate1Id))).hasSize(2);
+		assertThat(entityRepository.getList(TestEntity.QUERY_FOR_AGGREGATE(aggregate1Id))).hasSize(2);
 	}
 
 	@Test
 	public void testCreateSimpleEntity() {
 		SimpleTestEntity entity = new SimpleTestEntity();
 		entity.setName("Entity");
-		simpleEntityManager.save(entity);
+		simpleEntityRepository.save(entity);
 		simpleEntityId = entity.getId();
 		assertThat(simpleEntityId).isNotNull();
 	}
 
 	@Test(dependsOnMethods = "testCreateSimpleEntity")
 	public void updateSimpleEntity() {
-		SimpleTestEntity entity = simpleEntityManager.get(simpleEntityId);
+		SimpleTestEntity entity = simpleEntityRepository.get(simpleEntityId);
 		entity.setName("Entity2");
-		simpleEntityManager.save(entity);
-		assertThat(simpleEntityManager.get(simpleEntityId).getName()).isEqualTo("Entity2");
-		simpleEntityManager.evict(simpleEntityId);
-		assertThat(simpleEntityManager.get(simpleEntityId).getName()).isEqualTo("Entity2");
+		simpleEntityRepository.save(entity);
+		assertThat(simpleEntityRepository.get(simpleEntityId).getName()).isEqualTo("Entity2");
+		simpleEntityRepository.evict(simpleEntityId);
+		assertThat(simpleEntityRepository.get(simpleEntityId).getName()).isEqualTo("Entity2");
 	}
 
 	@Test(dependsOnMethods = "updateSimpleEntity")
 	public void transactionRollbackDoesNotPolluteTheCache() {
 		TransactionManager.execute(tran -> {
-			SimpleTestEntity entity = simpleEntityManager.get(simpleEntityId);
+			SimpleTestEntity entity = simpleEntityRepository.get(simpleEntityId);
 			entity.setName("Entity3");
-			simpleEntityManager.save(entity);
+			simpleEntityRepository.save(entity);
 			tran.setRollbackOnly();
 			return null;
 		});
-		assertThat(simpleEntityManager.get(simpleEntityId).getName()).isEqualTo("Entity2");
-		simpleEntityManager.evict(simpleEntityId);
-		assertThat(simpleEntityManager.get(simpleEntityId).getName()).isEqualTo("Entity2");
+		assertThat(simpleEntityRepository.get(simpleEntityId).getName()).isEqualTo("Entity2");
+		simpleEntityRepository.evict(simpleEntityId);
+		assertThat(simpleEntityRepository.get(simpleEntityId).getName()).isEqualTo("Entity2");
 	}
 }

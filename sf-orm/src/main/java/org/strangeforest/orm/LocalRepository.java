@@ -39,7 +39,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 		setUsePredicatedQueryCache(usePredicatedQueryCache);
 		this.cache = new LockableLRUCache<>();
 		context.attach(dao);
-		context.registerRepository(dao.entityClass(), this);
+		context.registerRepository(entityClass, this);
 	}
 
 	public void init() {

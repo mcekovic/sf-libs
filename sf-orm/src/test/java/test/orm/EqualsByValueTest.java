@@ -1,13 +1,12 @@
 package test.orm;
 
+import org.junit.*;
 import org.strangeforest.orm.*;
-import org.testng.annotations.*;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.strangeforest.orm.EqualsByValueUtil.*;
 import static test.orm.TestMakers.*;
 
-@Test
 public class EqualsByValueTest {
 
 	@Test
