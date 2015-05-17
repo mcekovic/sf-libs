@@ -26,6 +26,53 @@ public class LocalRepositoryEntityCacheDisabledTest {
 	}
 
 
+	// Get entity
+
+	@Test
+	public void entityIsFetchedAndGet() {
+		SimpleTestEntity entity = new SimpleTestEntity(1L);
+		entity.setName("Entity");
+
+		when(dao.fetch(1L)).thenReturn(entity);
+
+		SimpleTestEntity entity2 = repository.get(1L);
+
+		verify(dao).fetch(1L);
+		assertThat(entity2).isSameAs(entity);
+
+		when(dao.fetch(1L)).thenReturn(entity.deepClone());
+
+		SimpleTestEntity entity3 = repository.get(entity.getId());
+
+		verify(dao, times(2)).fetch(1L);
+		verifyNoMoreInteractions(dao);
+		assertThat(entity3).isNotSameAs(entity);
+		assertThat(entity3).isNotSameAs(entity2);
+	}
+
+	@Test
+	public void entityIsFetchedAndGetInTheSameTransaction() {
+		TransactionManager.execute(tran -> {
+			SimpleTestEntity entity = new SimpleTestEntity(1L);
+			entity.setName("Entity");
+
+			when(dao.fetch(1L)).thenReturn(entity);
+
+			SimpleTestEntity entity2 = repository.get(1L);
+
+			verify(dao).fetch(1L);
+			assertThat(entity2).isSameAs(entity);
+
+			SimpleTestEntity entity3 = repository.get(entity.getId());
+
+			verifyNoMoreInteractions(dao);
+			assertThat(entity3).isSameAs(entity);
+			assertThat(entity3).isSameAs(entity2);
+			return null;
+		});
+	}
+
+
 	// Create new Entity
 
 	@Test
