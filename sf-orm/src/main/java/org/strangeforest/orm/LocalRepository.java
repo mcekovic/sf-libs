@@ -516,7 +516,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 
 	@Override public void delete(I id) {
 		dao.delete(id);
-		getCache().deleted(id);
+		evict(id);
 		evictFromQueries(id);
 	}
 
