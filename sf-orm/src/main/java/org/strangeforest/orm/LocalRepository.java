@@ -240,12 +240,13 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 		if (queryCache != null) {
 			return new EntityReferenceList<>(context, entityClass,
 				new ArrayList<>(queryCache.lockedGet(query, key -> {
+					EntityCache<I, E> cache = getCache();
 					List<E> entities = dao.fetchList(query);
 					List<I> ids = new ArrayList<>(entities.size());
 					for (E entity : entities) {
 						context.attach(entity);
 						ids.add(entity.getId());
-						getCache().tryLockedPut(entity);
+						cache.tryLockedPut(entity);
 					}
 					return ids;
 				}))
@@ -273,6 +274,8 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 				E entity = cache.get(id);
 				if (entity == null) {
 					entity = fetch(id);
+					if (entity == null)
+						throw new NotFoundException(entityClass, id);
 					cache.put(entity);
 				}
 				List<D> details = accessor.get(entity);
@@ -513,7 +516,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 
 	@Override public void delete(I id) {
 		dao.delete(id);
-		evict(id);
+		getCache().deleted(id);
 		evictFromQueries(id);
 	}
 
@@ -714,7 +717,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 				predicatedQueryCache.lock(query);
 				try {
 					List<I> result = queryEntry.getValue();
-					Comparator<I> comparator = getQueryComparator(query, result, entity, null);
+					Comparator<I> comparator = updateQueryResult(query, result, entity, null);
 					sortOrInvalidateQuery(query, result, comparator);
 				}
 				finally {
@@ -735,7 +738,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 					List<I> result = queryEntry.getValue();
 					Comparator<I> comparator = null;
 					for (E entity : entities)
-						comparator = getQueryComparator(query, result, entity, comparator);
+						comparator = updateQueryResult(query, result, entity, comparator);
 					sortOrInvalidateQuery(query, result, comparator);
 				}
 				finally {
@@ -747,7 +750,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 
 	private static final Comparator MARK_FOR_REMOVE = Collections.reverseOrder();
 
-	private Comparator<I> getQueryComparator(PredicatedQuery query, List<I> result, E entity, Comparator<I> comparator) {
+	private Comparator<I> updateQueryResult(PredicatedQuery query, List<I> result, E entity, Comparator<I> comparator) {
 		I id = entity.getId();
 		if (query.test(entity)) {
 			if (!result.contains(id)) {
