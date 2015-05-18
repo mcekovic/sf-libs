@@ -40,6 +40,13 @@ final class EntityCache<I, E extends DomainEntity<I, E>> {
 		return entity;
 	}
 
+	public E getOld(I id, Function<I, E> fetcher) {
+		E entity = useL2 ? l2.get(id) : null;
+		if (entity == null)
+			entity = fetcher.apply(id);
+		return entity;
+	}
+
 	private E l2ToL1(I id, E entity) {
 		if (entity != null) {
 			entity = entity.lazyDeepClone();

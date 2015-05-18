@@ -380,7 +380,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 		I id = entity.getId();
 		cache.lock(id);
 		try {
-			E oldEntity = find(id);
+			E oldEntity = findOld(id);
 			changed = dao.save(entity, oldEntity);
 			addEntity(cache, entity, true);
 		}
@@ -389,6 +389,10 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 		}
 		if (changed)
 			evictFromQueries(entity);
+	}
+
+	private E findOld(I id) {
+		return getCache().getOld(id, this::fetch);
 	}
 
 	@Override public void save(E entity, E optLockedEntity) throws OptimisticLockingException {
@@ -403,7 +407,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 		else {
 			cache.lock(id);
 			try {
-				E oldEntity = find(id);
+				E oldEntity = findOld(id);
 				boolean hasBeenChanged = false;
 				if (oldEntity != null && optLockedEntity != null) {
 					oldEntity.loadDetails();
@@ -450,7 +454,7 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 					lockedIds.add(id);
 					E oldEntity = oldEntities != null ? findIn(oldEntities, id) : null;
 					if (oldEntity == null)
-						oldEntity = find(id);
+						oldEntity = findOld(id);
 					if (oldEntity == null || !entity.equalsByValue(oldEntity)) {
 						forSave.add(entity);
 						oldForSave.add(oldEntity);
@@ -522,16 +526,26 @@ public class LocalRepository<I, E extends DomainEntity<I, E>> implements Reposit
 
 	@Override public void delete(E entity, E optLockedEntity) throws OptimisticLockingException {
 		I id = entity.getId();
-		E oldEntity = find(id);
-		boolean hasBeenChanged = false;
-		if (oldEntity != null && optLockedEntity != null) {
-			oldEntity.loadDetails();
-			hasBeenChanged = !optLockedEntity.equalsByValue(oldEntity);
+		EntityCache<I, E> cache = getCache();
+		cache.lock(id);
+		try {
+			E oldEntity = findOld(id);
+			boolean hasBeenChanged = false;
+			if (oldEntity != null && optLockedEntity != null) {
+				oldEntity.loadDetails();
+				hasBeenChanged = !optLockedEntity.equalsByValue(oldEntity);
+			}
+			if (!hasBeenChanged) {
+				dao.delete(id);
+				evict(id);
+			}
+			else
+				throw new OptimisticLockingException(entityClass, id);
 		}
-		if (!hasBeenChanged)
-			delete(id);
-		else
-			throw new OptimisticLockingException(entityClass, id);
+		finally {
+			cache.unlock(id);
+		}
+		evictFromQueries(id);
 	}
 
 	@Override public void deleteAll() {
