@@ -7,4 +7,4 @@ Strange Forrest Libraries is set of small useful Java libraries:
 * SF ORM - Lightweight ORM library with support for domain remoting.
 
 [![Build Status](https://travis-ci.org/mcekovic/sf-libs.svg?branch=master)](https://travis-ci.org/mcekovic/sf-libs)
-[ ![Download](https://api.bintray.com/packages/mcekovic/artifacts/sf-libs/images/download.svg) ](https://bintray.com/mcekovic/artifacts/sf-libs/_latestVersion)
+[![Download](https://img.shields.io/bintray/v/mcekovic/artifacts/sf-libs.svg)](https://bintray.com/mcekovic/artifacts/sf-libs/_latestVersion)
