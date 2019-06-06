@@ -16,14 +16,9 @@ public abstract class DBDAO {
 		db = new DBGateway(dataSource, getSQLs(sqlsName));
 	}
 
-	private SQLs getSQLs(String sqlsLocation) {
+	private SQLs getSQLs(String sqlsName) {
 		Class cls = getClass();
-		sqlsLocation = sqlsLocation != null ? sqlsLocation : (cls.getSimpleName() + ".sqls");
-		InputStream in = cls.getResourceAsStream(sqlsLocation);
-		if (in != null)
-			return new SQLs(in);
-		else
-			throw new DBException("Cannot find SQLs: " + sqlsLocation);
+		return new SQLs(cls, sqlsName != null ? sqlsName : (cls.getSimpleName() + ".sqls"));
 	}
 
 	public boolean hasProfile(String profile) {

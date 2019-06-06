@@ -5,6 +5,8 @@ import java.sql.*;
 import org.slf4j.*;
 import org.strangeforest.db.*;
 
+import static org.strangeforest.db.ConnectionPoolLogger.*;
+
 public final class DBConnectionPoolLogger implements ConnectionPoolLogger {
 
 	private Logger dbLogger;
@@ -23,16 +25,16 @@ public final class DBConnectionPoolLogger implements ConnectionPoolLogger {
 
 	@Override public void logStatement(Statement st) {
 		if (dbLogger.isTraceEnabled())
-			dbLogger.trace(st.toString());
+			dbLogger.trace(toStatementString(st));
 	}
 
 	@Override public void logPreparedStatement(PreparedStatement pst) {
 		if (dbLogger.isTraceEnabled())
-			dbLogger.trace(pst.toString());
+			dbLogger.trace(toStatementString(pst));
 	}
 
 	@Override public void logCallableStatement(CallableStatement call) {
 		if (dbLogger.isTraceEnabled())
-			dbLogger.trace(call.toString());
+			dbLogger.trace(toStatementString(call));
 	}
 }

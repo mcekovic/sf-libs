@@ -275,11 +275,11 @@ public class StatementHelper implements Statement {
 	}
 
 	@Override public <T> T unwrap(Class<T> iface) throws SQLException {
-		return iface.isInstance(this) ? (T)this : st.unwrap(iface);
+		return iface.isInterface() && iface.isInstance(this) ? (T)this : st.unwrap(iface);
 	}
 
 	@Override public boolean isWrapperFor(Class<?> iface) throws SQLException {
-		return iface.isInstance(this) || st.isWrapperFor(iface);
+		return (iface.isInterface() && iface.isInstance(this)) || st.isWrapperFor(iface);
 	}
 
 

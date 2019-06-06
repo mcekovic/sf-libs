@@ -493,17 +493,17 @@ public class PreparedStatementHelper extends StatementHelper implements Prepared
 	// Statement methods
 
 	@Override public void close() throws SQLException {
-		if (!pooled) {
-			if (conn != null) // Removal from PooledConnection must be in close() as removal closes wrapped statement
-				conn.removeStatement(key);
-			pst.close();
-		}
-		else if (rs != null) {
+		if (rs != null) {
 			try {
 				rs.close();
 			}
 			catch (SQLException ignored) {}
 			rs = null;
+		}
+		if (!pooled) {
+			if (conn != null) // Removal from PooledConnection must be in close() as removal closes wrapped statement
+				conn.removeStatement(key);
+			pst.close();
 		}
 	}
 

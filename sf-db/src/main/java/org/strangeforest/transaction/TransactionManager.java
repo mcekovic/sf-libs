@@ -1,5 +1,6 @@
 package org.strangeforest.transaction;
 
+import org.slf4j.*;
 import org.strangeforest.util.*;
 
 /**
@@ -59,9 +60,16 @@ public abstract class TransactionManager {
 			return result;
 		}
 		catch (Throwable th) {
-			rollback();
+			silentRollback();
 			throw ExceptionUtil.throwIt(th);
 		}
+	}
+
+	private static void silentRollback() {
+		try {
+			rollback();
+		}
+		catch (Throwable ignored) {}
 	}
 
 	public static Transaction begin() {

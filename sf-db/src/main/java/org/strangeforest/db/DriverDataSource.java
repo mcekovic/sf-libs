@@ -31,11 +31,11 @@ public class DriverDataSource implements DataSource {
 		return DriverManager.getConnection(url, username, password);
 	}
 
-	@Override public PrintWriter getLogWriter() throws SQLException {
+	@Override public PrintWriter getLogWriter() {
 		return DriverManager.getLogWriter();
 	}
 
-	@Override public void setLogWriter(PrintWriter writer) throws SQLException {
+	@Override public void setLogWriter(PrintWriter writer) {
 		DriverManager.setLogWriter(writer);
 	}
 
@@ -43,11 +43,11 @@ public class DriverDataSource implements DataSource {
 		throw new SQLFeatureNotSupportedException();
 	}
 
-	@Override public int getLoginTimeout() throws SQLException {
+	@Override public int getLoginTimeout() {
 		return DriverManager.getLoginTimeout();
 	}
 
-	@Override public void setLoginTimeout(int timeout) throws SQLException {
+	@Override public void setLoginTimeout(int timeout) {
 		DriverManager.setLoginTimeout(timeout);
 	}
 
@@ -55,7 +55,7 @@ public class DriverDataSource implements DataSource {
 		throw new SQLException("Cannot unwrap to " + iface.getName());
 	}
 
-	@Override public boolean isWrapperFor(Class<?> iface) throws SQLException {
+	@Override public boolean isWrapperFor(Class<?> iface) {
 		return false;
 	}
 }

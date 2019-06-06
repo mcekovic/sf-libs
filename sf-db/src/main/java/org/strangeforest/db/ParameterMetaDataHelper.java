@@ -52,11 +52,11 @@ public class ParameterMetaDataHelper implements ParameterMetaData {
 	}
 
 	@Override public <T> T unwrap(Class<T> iface) throws SQLException {
-		return iface.isInstance(this) ? (T)this : pmd.unwrap(iface);
+		return iface.isInterface() && iface.isInstance(this) ? (T)this : pmd.unwrap(iface);
 	}
 
 	@Override public boolean isWrapperFor(Class<?> iface) throws SQLException {
-		return iface.isInstance(this) || pmd.isWrapperFor(iface);
+		return (iface.isInterface() && iface.isInstance(this)) || pmd.isWrapperFor(iface);
 	}
 
 

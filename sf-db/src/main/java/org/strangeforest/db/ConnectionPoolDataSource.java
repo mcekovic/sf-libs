@@ -13,7 +13,7 @@ import org.strangeforest.pool.*;
  * <p><tt>ConnectionPoolDataSource</tt> is an <i>adapter</i> for <tt>ConnectionPool</tt> that implements <tt>DataSource</tt> interface.</p>
  * @see DataSource
  */
-public class ConnectionPoolDataSource implements DataSource, Closeable {
+public class ConnectionPoolDataSource implements PoolableDataSource, Closeable {
 
 	private ConnectionPool pool;
 
@@ -50,11 +50,11 @@ public class ConnectionPoolDataSource implements DataSource, Closeable {
 			throw new PoolException(MessageFormat.format("Username {0} and supplied password are not supported by this pool.", username));
 	}
 
-	@Override public PrintWriter getLogWriter() throws SQLException {
+	@Override public PrintWriter getLogWriter() {
 		return DriverManager.getLogWriter();
 	}
 
-	@Override public void setLogWriter(PrintWriter writer) throws SQLException {
+	@Override public void setLogWriter(PrintWriter writer) {
 		DriverManager.setLogWriter(writer);
 	}
 
@@ -62,23 +62,23 @@ public class ConnectionPoolDataSource implements DataSource, Closeable {
 		throw new SQLFeatureNotSupportedException();
 	}
 
-	@Override public int getLoginTimeout() throws SQLException {
+	@Override public int getLoginTimeout() {
 		return DriverManager.getLoginTimeout();
 	}
 
-	@Override public void setLoginTimeout(int timeout) throws SQLException {
+	@Override public void setLoginTimeout(int timeout) {
 		DriverManager.setLoginTimeout(timeout);
 	}
 
 	@Override public <T> T unwrap(Class<T> iface) throws SQLException {
-		if (iface.isInstance(this))
+		if (iface.isInterface() && iface.isInstance(this))
 			return (T)this;
 		else
 			throw new SQLException("Cannot unwrap to " + iface);
 	}
 
-	@Override public boolean isWrapperFor(Class<?> iface) throws SQLException {
-		return iface.isInstance(this);
+	@Override public boolean isWrapperFor(Class<?> iface) {
+		return iface.isInterface() && iface.isInstance(this);
 	}
 
 	@Override public void close() {

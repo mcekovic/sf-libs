@@ -6,10 +6,13 @@ import javax.sql.*;
 
 import org.strangeforest.db.*;
 
+import static org.strangeforest.db.ConnectionPoolLogger.*;
+
 public class DBGateway {
 
 	private DataSource dataSource;
 	private ConnectionPool pool;
+	private ConnectionPoolLogger logger;
 	private final SQLs sqls;
 	private final boolean statementsWrapped;
 
@@ -20,16 +23,23 @@ public class DBGateway {
 	}
 
 	public DBGateway(DataSource dataSource, SQLs sqls) {
+		this(dataSource, sqls, null);
+	}
+
+	public DBGateway(DataSource dataSource, SQLs sqls, ConnectionPoolLogger logger) {
 		super();
 		this.dataSource = dataSource;
 		this.sqls = sqls;
 		try {
-			statementsWrapped = dataSource.isWrapperFor(org.strangeforest.db.ConnectionPoolDataSource.class);
+			statementsWrapped = dataSource.isWrapperFor(PoolableDataSource.class);
 		}
 		catch (SQLException ex) {
 			throw wrapSQLException(ex, null);
 		}
-	}
+		if (!statementsWrapped)
+			this.logger = logger;
+		else if (logger != null)
+			logger.logMessage("Logger specified along with ConnectionPoolDataSource will be ignored.");	}
 
 	public DBGateway(ConnectionPool pool) {
 		this(pool, null);
@@ -76,8 +86,8 @@ public class DBGateway {
 	protected final void drop(Connection conn) {
 		try {
 			if (dataSource != null) {
-				if (dataSource.isWrapperFor(org.strangeforest.db.ConnectionPoolDataSource.class))
-					dataSource.unwrap(org.strangeforest.db.ConnectionPoolDataSource.class).dropConnection(conn);
+				if (dataSource.isWrapperFor(PoolableDataSource.class))
+					dataSource.unwrap(PoolableDataSource.class).dropConnection(conn);
 				else
 					conn.close();
 			}
@@ -486,6 +496,51 @@ public class DBGateway {
 	}
 
 
+	// Result Set fetchers
+
+	public <T> T fetch(String sql, ResultSetExtractor<T> extractor) {
+		return fetch(sql, null, null, extractor);
+	}
+
+	public <T> T fetch(String sql, SQLTransformer transformer, ResultSetExtractor<T> extractor) {
+		return fetch(sql, transformer, null, extractor);
+	}
+
+	public <T> T fetch(String sql, StatementPreparer preparer, ResultSetExtractor<T> extractor) {
+		return fetch(sql, null, preparer, extractor);
+	}
+
+	public <T> T fetch(String sql, SQLTransformer transformer, StatementPreparer preparer, ResultSetExtractor<T> extractor) {
+		PreparedStatementHelper st = null;
+		try {
+			sql = getSQL(sql, transformer);
+			Connection conn = getConnection();
+			try {
+				st = wrapPreparedStatement(conn, sql);
+				try {
+					if (preparer != null)
+						preparer.prepare(st);
+					ResultSet rs = st.executeQuery();
+					return extractor.extractResult(rs);
+				}
+				finally {
+					close(st);
+				}
+			}
+			catch (SQLRecoverableException ex) {
+				drop(conn);
+				throw ex;
+			}
+			finally {
+				close(conn);
+			}
+		}
+		catch (SQLException ex) {
+			throw wrapSQLException(ex, st);
+		}
+	}
+
+
 	// Object fetchers
 
 	public <T> T fetchOne(String sql, ObjectReader<T> reader) {
@@ -535,7 +590,7 @@ public class DBGateway {
 					if (rs.next())
 						obj = reader.read(rs);
 					if (failIfMultipleFound && rs.next())
-						throw new DBException("Multiple results found.", st.toString());
+						throw new DBException("Multiple results found.", toStatementString(st));
 				}
 				finally {
 					close(st);
@@ -723,23 +778,32 @@ public class DBGateway {
 	protected final StatementHelper wrapStatement(Connection conn) throws SQLException {
 		if (statementsWrapped)
 			return (StatementHelper)conn.createStatement();
-		else
-			return new StatementHelper(conn.createStatement());
+		else {
+			StatementHelper st = new StatementHelper(conn.createStatement());
+			st.setLogger(logger);
+			return st;
+		}
 	}
 
 	protected final PreparedStatementHelper wrapPreparedStatement(Connection conn, String sql) throws SQLException {
 		if (statementsWrapped)
 			return (PreparedStatementHelper)conn.prepareStatement(sql);
-		else
-			return new PreparedStatementHelper(conn, sql);
+		else {
+			PreparedStatementHelper st = new PreparedStatementHelper(conn, sql);
+			st.setLogger(logger);
+			return st;
+		}
 	}
 
 	protected final PreparedStatementHelper wrapPreparedStatement(Connection conn, String sql, AutoGenColumnsProvider provider) throws SQLException {
 		if (provider != null) {
 			if (statementsWrapped)
 				return (PreparedStatementHelper)conn.prepareStatement(sql, provider.getAutoGenColumns());
-			else
-				return new PreparedStatementHelper(conn, sql, provider.getAutoGenColumns());
+			else {
+				PreparedStatementHelper st = new PreparedStatementHelper(conn, sql, provider.getAutoGenColumns());
+				st.setLogger(logger);
+				return st;
+			}
 		}
 		else
 			return wrapPreparedStatement(conn, sql);
@@ -748,12 +812,15 @@ public class DBGateway {
 	protected final CallableStatementHelper wrapCallableStatement(Connection conn, String sql) throws SQLException {
 		if (statementsWrapped)
 			return (CallableStatementHelper)conn.prepareCall(sql);
-		else
-			return new CallableStatementHelper(conn, sql);
+		else {
+			CallableStatementHelper call = new CallableStatementHelper(conn, sql);
+			call.setLogger(logger);
+			return call;
+		}
 	}
 
 	protected static DBException wrapSQLException(SQLException ex, Statement st) {
-		return DBException.create(DATABASE_ERROR, st != null ? st.toString() : null, ex);
+		return DBException.create(DATABASE_ERROR, st != null ? toStatementString(st) : null, ex);
 	}
 
 
